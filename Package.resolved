@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "commonUtils",
+        "repositoryURL": "https://github.com/vitalii-tielieusov/commonUtils.git",
+        "state": {
+          "branch": "master",
+          "revision": "86ce9f3989d0c9377e94e3b5eb60071e86a15e1a",
+          "version": null
+        }
+      },
+      {
         "package": "SnapKit",
         "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
         "state": {
