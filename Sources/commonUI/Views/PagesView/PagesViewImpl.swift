@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import math
 
 final class PagesViewImpl: UIView {
     
@@ -131,15 +132,6 @@ final class PagesViewImpl: UIView {
 //Pages custom size
 extension PagesViewImpl {
     
-    public func lineFunctionValue(inArgumentValue x: CGFloat,
-                                  firstFunctionKnownValue y1: CGFloat,
-                                  secondFunctionKnownValue y2: CGFloat,
-                                  firstFunctionKnownArgument x1: CGFloat,
-                                  secondFunctionKnownArgument x2: CGFloat) -> CGFloat {
-        
-        return (x - y2) * ((x2 - x1) / (y2 - y1)) + x2
-    }
-    
     func pageViewXOffset(forPageIndex pageIndex: Int,
                          scrollOffset x: CGFloat,
                          leftPageWidth w1: CGFloat,
@@ -166,11 +158,11 @@ extension PagesViewImpl {
             let a = pageX - pageWidth
             let b = pageX
 
-            return lineFunctionValue(inArgumentValue: x,
-                                     firstFunctionKnownValue: a,
-                                     secondFunctionKnownValue: b,
-                                     firstFunctionKnownArgument: t3,
-                                     secondFunctionKnownArgument: t2)
+            return Math.lineFunctionValue(inArgumentValue: x,
+                                          firstFunctionKnownValue: a,
+                                          secondFunctionKnownValue: b,
+                                          firstFunctionKnownArgument: t3,
+                                          secondFunctionKnownArgument: t2)
         }
         
         if pageX == x {
@@ -181,11 +173,11 @@ extension PagesViewImpl {
             let a = pageX
             let b = pageX + pageWidth
             
-            return lineFunctionValue(inArgumentValue: x,
-                                     firstFunctionKnownValue: a,
-                                     secondFunctionKnownValue: b,
-                                     firstFunctionKnownArgument: t2,
-                                     secondFunctionKnownArgument: t1)
+            return Math.lineFunctionValue(inArgumentValue: x,
+                                          firstFunctionKnownValue: a,
+                                          secondFunctionKnownValue: b,
+                                          firstFunctionKnownArgument: t2,
+                                          secondFunctionKnownArgument: t1)
         }
         
         if (x - pageX) >= pageWidth {
@@ -213,11 +205,11 @@ extension PagesViewImpl {
             let a = pageX - pageWidth
             let b = pageX
 
-            return lineFunctionValue(inArgumentValue: x,
-                                     firstFunctionKnownValue: a,
-                                     secondFunctionKnownValue: b,
-                                     firstFunctionKnownArgument: w3,
-                                     secondFunctionKnownArgument: w2)
+            return Math.lineFunctionValue(inArgumentValue: x,
+                                          firstFunctionKnownValue: a,
+                                          secondFunctionKnownValue: b,
+                                          firstFunctionKnownArgument: w3,
+                                          secondFunctionKnownArgument: w2)
         }
         
         if pageX == x {
@@ -228,11 +220,11 @@ extension PagesViewImpl {
             let a = pageX
             let b = pageX + pageWidth
             
-            return lineFunctionValue(inArgumentValue: x,
-                                     firstFunctionKnownValue: a,
-                                     secondFunctionKnownValue: b,
-                                     firstFunctionKnownArgument: w2,
-                                     secondFunctionKnownArgument: w1)
+            return Math.lineFunctionValue(inArgumentValue: x,
+                                          firstFunctionKnownValue: a,
+                                          secondFunctionKnownValue: b,
+                                          firstFunctionKnownArgument: w2,
+                                          secondFunctionKnownArgument: w1)
         }
         
         if (x - pageX) >= pageWidth {
@@ -260,11 +252,11 @@ extension PagesViewImpl {
             let a = pageX - pageWidth
             let b = pageX
 
-            return lineFunctionValue(inArgumentValue: x,
-                                     firstFunctionKnownValue: a,
-                                     secondFunctionKnownValue: b,
-                                     firstFunctionKnownArgument: h3,
-                                     secondFunctionKnownArgument: h2)
+            return Math.lineFunctionValue(inArgumentValue: x,
+                                          firstFunctionKnownValue: a,
+                                          secondFunctionKnownValue: b,
+                                          firstFunctionKnownArgument: h3,
+                                          secondFunctionKnownArgument: h2)
         }
         
         if pageX == x {
@@ -275,11 +267,11 @@ extension PagesViewImpl {
             let a = pageX
             let b = pageX + pageWidth
             
-            return lineFunctionValue(inArgumentValue: x,
-                                     firstFunctionKnownValue: a,
-                                     secondFunctionKnownValue: b,
-                                     firstFunctionKnownArgument: h2,
-                                     secondFunctionKnownArgument: h1)
+            return Math.lineFunctionValue(inArgumentValue: x,
+                                          firstFunctionKnownValue: a,
+                                          secondFunctionKnownValue: b,
+                                          firstFunctionKnownArgument: h2,
+                                          secondFunctionKnownArgument: h1)
         }
         
         if (x - pageX) >= pageWidth {

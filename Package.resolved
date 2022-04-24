@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "math",
+        "repositoryURL": "https://github.com/vitalii-tielieusov/math.git",
+        "state": {
+          "branch": "master",
+          "revision": "18890cc051d36c72ebafda6232fabd80674adf2e",
+          "version": null
+        }
+      },
+      {
         "package": "SnapKit",
         "repositoryURL": "https://github.com/SnapKit/SnapKit.git",
         "state": {
