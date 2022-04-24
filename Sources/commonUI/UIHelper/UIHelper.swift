@@ -2,7 +2,7 @@
 //  UIHelper.swift
 //  Inspire me
 //
-//  Created by Vitaliy Teleusov on 08.01.2022.
+//  Created by Vitalii Tielieusov on 08.01.2022.
 //
 
 import UIKit

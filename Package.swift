@@ -16,7 +16,6 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-//        .package(name: "ApplicationCore", path: "../ApplicationCore"),
         .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.0.1"))
     ],
     targets: [
@@ -24,7 +23,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "commonUI",
-            dependencies: [/*"ApplicationCore", */"SnapKit"]),
+            dependencies: ["SnapKit"]),
         .testTarget(
             name: "commonUITests",
             dependencies: ["commonUI"]),
