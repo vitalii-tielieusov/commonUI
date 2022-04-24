@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension UIAlertController {
+public extension UIAlertController {
     //Support iPad
     static func actionSheetWith(title: String?, message: String?, sourceView: UIView?) -> UIAlertController {
         let actionController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
@@ -23,7 +23,7 @@ extension UIAlertController {
     
 }
 
-extension UIAlertAction {
+public extension UIAlertAction {
     
     static func action(title: String, style: UIAlertAction.Style = .default, handler: ((UIAlertAction) -> Void)? = nil) -> UIAlertAction {
         return UIAlertAction(title: title, style: style, handler: handler)
