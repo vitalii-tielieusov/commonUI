@@ -18,6 +18,8 @@ final class PagesViewImpl: UIView {
     
     weak var layoutDelegate: PagesViewLayoutDelegate?
     
+    var shouldKillScroll: Bool = false
+    
     public lazy var scrollView: UIScrollView = {
         let scrollView = prepareScrollView()
         scrollView.delegate = self
@@ -457,6 +459,7 @@ extension PagesViewImpl: PagesView {
 }
 
 extension PagesViewImpl: UIScrollViewDelegate {
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
             
         remakeContentConstraints()
@@ -464,12 +467,29 @@ extension PagesViewImpl: UIScrollViewDelegate {
         if isScrollEnabled {
             notifySelectedPageIndexDidChange()
         }
+        
+        switch scrollView.panGestureRecognizer.state {
+        case .possible:
+            if shouldKillScroll { killScroll() }
+
+        default:
+            break
+        }
+    }
+    
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        shouldKillScroll = false
+        scrollToMostVisiblePage()
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if isScrollEnabled {
             scrollToMostVisiblePage()
         }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        shouldKillScroll = true
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView,
@@ -486,9 +506,14 @@ extension PagesViewImpl: UIScrollViewDelegate {
         }
     }
     
-    private func scrollToMostVisiblePage() {
+    func killScroll() {
+        let offset = self.scrollView.contentOffset;
+        scrollView.setContentOffset(offset, animated: false)
+    }
+    
+    private func scrollToMostVisiblePage(animated: Bool = true) {
         setSelectedPageIndex(index: mostVisiblePageIndex(),
-                             animated: true)
+                             animated: animated)
     }
     
     private func mostVisiblePageIndex() -> Int {
