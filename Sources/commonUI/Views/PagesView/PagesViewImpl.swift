@@ -463,11 +463,7 @@ extension PagesViewImpl: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
             
         remakeContentConstraints()
-        
-        if isScrollEnabled {
-            notifySelectedPageIndexDidChange()
-        }
-        
+
         switch scrollView.panGestureRecognizer.state {
         case .possible:
             if shouldKillScroll { killScroll() }
@@ -485,6 +481,7 @@ extension PagesViewImpl: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         if isScrollEnabled {
             scrollToMostVisiblePage()
+            notifySelectedPageIndexDidChange()
         }
     }
     
@@ -496,6 +493,7 @@ extension PagesViewImpl: UIScrollViewDelegate {
                                   willDecelerate decelerate: Bool) {
         if isScrollEnabled && !decelerate {
             scrollToMostVisiblePage()
+            notifySelectedPageIndexDidChange()
         }
     }
     
