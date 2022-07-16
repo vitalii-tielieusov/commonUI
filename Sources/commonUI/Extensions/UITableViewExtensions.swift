@@ -20,7 +20,7 @@ class UITableViewWithReloadCompletion: UITableView {
         reloadDataCompletionBlock = nil
     }
     
-    func reloadDataWithCompletion(completion:@escaping () -> Void) {
+    public func reloadDataWithCompletion(completion:@escaping () -> Void) {
         reloadDataCompletionBlock = completion
         super.reloadData()
     }
@@ -28,7 +28,7 @@ class UITableViewWithReloadCompletion: UITableView {
 
 //https://stackoverflow.com/questions/16071503/how-to-tell-when-uitableview-has-completed-reloaddata
 extension UITableView {
-    func reloadData(completion: @escaping () -> Void) {
+    public func reloadData(completion: @escaping () -> Void) {
         UIView.animate(withDuration: 0, animations: {
             self.reloadData()
         }, completion: { _ in
@@ -39,7 +39,7 @@ extension UITableView {
 
 extension UITableView {
     //set the tableHeaderView so that the required height can be determined, update the header's frame and set it again
-    func setAndLayoutTableHeaderView(header: UIView) {
+    public func setAndLayoutTableHeaderView(header: UIView) {
         header.removeFromSuperview()
         tableHeaderView = nil
         //self.tableHeaderView = header
@@ -52,7 +52,7 @@ extension UITableView {
         tableHeaderView = header
     }
     
-    func setAndLayoutTableFooterView(footer: UIView) {
+    public func setAndLayoutTableFooterView(footer: UIView) {
         footer.removeFromSuperview()
         tableFooterView = nil
         footer.setNeedsLayout()
@@ -64,7 +64,7 @@ extension UITableView {
         tableFooterView = footer
     }
     
-    func setAndLayoutTableFooterView(footer: UIView, frame: CGRect) {
+    public func setAndLayoutTableFooterView(footer: UIView, frame: CGRect) {
         footer.removeFromSuperview()
         tableFooterView = nil
         footer.setNeedsLayout()
@@ -73,7 +73,7 @@ extension UITableView {
         tableFooterView = footer
     }
     
-    func registerReusableCell<T: UITableViewCell>(_: T.Type) where T: ReusableCell {
+    public func registerReusableCell<T: UITableViewCell>(_: T.Type) where T: ReusableCell {
         if let nib = T.nib {
             register(nib, forCellReuseIdentifier: T.reuseIdentifier)
         } else {
@@ -81,14 +81,14 @@ extension UITableView {
         }
     }
     
-    func dequeueReusableCell<T: UITableViewCell>(indexPath: IndexPath) -> T where T: ReusableCell {
+    public func dequeueReusableCell<T: UITableViewCell>(indexPath: IndexPath) -> T where T: ReusableCell {
         guard let cell = dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             fatalError("wrong type cell at index path \(indexPath)")
         }
         return cell
     }
     
-    func registerReusableHeaderFooterView<T: UITableViewHeaderFooterView>(_: T.Type) where T: ReusableHeaderFooter {
+    public func registerReusableHeaderFooterView<T: UITableViewHeaderFooterView>(_: T.Type) where T: ReusableHeaderFooter {
         if let nib = T.nib {
             register(nib, forHeaderFooterViewReuseIdentifier: T.reuseIdentifier)
         } else {
@@ -96,11 +96,11 @@ extension UITableView {
         }
     }
     
-    func dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T? where T: ReusableHeaderFooter {
+    public func dequeueReusableHeaderFooterView<T: UITableViewHeaderFooterView>() -> T? where T: ReusableHeaderFooter {
         return dequeueReusableHeaderFooterView(withIdentifier: T.reuseIdentifier) as? T
     }
     
-    func updateCellHeights() {
+    public func updateCellHeights() {
         if #available(iOS 11.0, *) {
             performBatchUpdates(nil, completion: nil)
         } else {
@@ -115,7 +115,7 @@ public protocol Identifiable {
 }
 
 extension UITableView {
-    var allIndexPaths: [IndexPath] {
+    public var allIndexPaths: [IndexPath] {
         var result = [IndexPath]()
         (0..<numberOfSections).forEach { section in
             (0..<numberOfRows(inSection: section)).forEach { row in

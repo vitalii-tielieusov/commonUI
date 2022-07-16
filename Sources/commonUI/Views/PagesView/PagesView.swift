@@ -11,6 +11,7 @@ public protocol PagesView {
     var view: UIView! { get }
     var selectedPageIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
+    var isClickable: Bool { get set }
 
     var dataSource: PagesViewDataSource? { get set }
     var delegate: PagesViewDelegate? { get set }

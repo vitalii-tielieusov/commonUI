@@ -21,7 +21,7 @@ final class PagesViewImpl: UIView {
     var shouldKillScroll: Bool = false
     
     public lazy var scrollView: UIScrollView = {
-        let scrollView = prepareScrollView()
+        let scrollView = UIHelper.prepareScrollView()
         scrollView.delegate = self
         return scrollView
     }()
@@ -29,6 +29,8 @@ final class PagesViewImpl: UIView {
     private lazy var scrollContentView: UIView = {
         return UIView()
     }()
+    
+    private var shouldAddTapGestureRecognizer = false
     
     private lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let gestureRecognizer = UITapGestureRecognizer(target: self,
@@ -64,7 +66,17 @@ final class PagesViewImpl: UIView {
         addSubview(scrollView)
         scrollView.addSubview(scrollContentView)
         
-        scrollView.addGestureRecognizer(tapGestureRecognizer)
+        addTapGestureRecognizerIdNeed()
+    }
+    
+    private func addTapGestureRecognizerIdNeed() {
+        if shouldAddTapGestureRecognizer {
+            scrollView.addGestureRecognizer(tapGestureRecognizer)
+        }
+    }
+    
+    private func removeTapGestureRecognizer() {
+        scrollView.removeGestureRecognizer(tapGestureRecognizer)
     }
     
     private func setupLayouts() {
@@ -120,10 +132,12 @@ final class PagesViewImpl: UIView {
             let pageView = dataSource.pageView(at: index)
             scrollContentView.addSubview(pageView)
             
+            let pageLeftOffset = pagesViewWidth * CGFloat(index)
+            
             pageView.snp.makeConstraints { make in
                 make.top.bottom.equalToSuperview()
                 make.width.equalTo(pagesViewWidth)
-                make.left.equalToSuperview().offset(pagesViewWidth * CGFloat(index))
+                make.left.equalToSuperview().offset(pageLeftOffset)
             }
             
             pageView.layer.cornerRadius = pagesCornerRadius
@@ -141,7 +155,7 @@ extension PagesViewImpl {
                          rightPageWidth w3: CGFloat,
                          horizontalPagesSpace delta: CGFloat,
                          pagesViewWidth: CGFloat) -> CGFloat {
-
+        
         let pageWidth = pagesViewWidth
         let pageX = pagePositionX(for: pageIndex)
         
@@ -152,7 +166,7 @@ extension PagesViewImpl {
         //rightPageOffset
         let t3 = -(0.5 * pageWidth - 0.5 * w2 - delta)
         
-        if pageX >= x + pageWidth {
+        if pageX > x + pageWidth {//TODO: Was '>=' Should check workflow
             return t3
         }
         
@@ -182,7 +196,7 @@ extension PagesViewImpl {
                                           secondFunctionKnownArgument: t1)
         }
         
-        if (x - pageX) >= pageWidth {
+        if (x - pageX) > pageWidth {//TODO: Was '>=' Should check workflow
             return t1
         }
 
@@ -399,6 +413,21 @@ extension PagesViewImpl: PagesView {
         }
         set {
             scrollView.isScrollEnabled = newValue
+        }
+    }
+    
+    var isClickable: Bool {
+        get {
+            return shouldAddTapGestureRecognizer
+        }
+        set {
+            shouldAddTapGestureRecognizer = newValue
+            
+            if shouldAddTapGestureRecognizer {
+                addTapGestureRecognizerIdNeed()
+            } else {
+                removeTapGestureRecognizer()
+            }
         }
     }
     

@@ -9,7 +9,7 @@ import UIKit
 
 extension UICollectionView {
     
-    func registerReusableCell<T: UICollectionViewCell>(_: T.Type) where T: ReusableCell {
+    public func registerReusableCell<T: UICollectionViewCell>(_: T.Type) where T: ReusableCell {
         if let nib = T.nib {
             self.register(nib, forCellWithReuseIdentifier: T.reuseIdentifier)
         } else {
@@ -17,7 +17,7 @@ extension UICollectionView {
         }
     }
     
-    func dequeueReusableCell<T: UICollectionViewCell>(indexPath: IndexPath) -> T where T: ReusableCell {
+    public func dequeueReusableCell<T: UICollectionViewCell>(indexPath: IndexPath) -> T where T: ReusableCell {
         guard let cell = self.dequeueReusableCell(withReuseIdentifier: T.reuseIdentifier, for: indexPath) as? T else {
             fatalError("wrong cell type at index path \(indexPath)")
         }

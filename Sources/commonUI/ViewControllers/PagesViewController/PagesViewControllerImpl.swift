@@ -79,6 +79,15 @@ open class PagesViewControllerImpl: UIViewController, PagesViewController {
         }
     }
     
+    open var isClickable: Bool {
+        get {
+            return pagesView.isClickable
+        }
+        set {
+            pagesView.isClickable = newValue
+        }
+    }
+    
     public func selectPage(at index: Int, animated: Bool) {
         
         pagesView.selectPage(at: index, animated: animated)
