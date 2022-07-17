@@ -18,7 +18,8 @@ final class PagesViewImpl: UIView {
     
     weak var layoutDelegate: PagesViewLayoutDelegate?
     
-    var shouldKillScroll: Bool = false
+    var scrollBehavior: ScrollBehavior = .pageByPage
+    private var shouldKillScroll: Bool = false
     
     public lazy var scrollView: UIScrollView = {
         let scrollView = UIHelper.prepareScrollView()
@@ -495,7 +496,7 @@ extension PagesViewImpl: UIScrollViewDelegate {
 
         switch scrollView.panGestureRecognizer.state {
         case .possible:
-            if shouldKillScroll { killScroll() }
+            if shouldKillScroll { killScrollIfNeed() }
 
         default:
             break
@@ -533,7 +534,10 @@ extension PagesViewImpl: UIScrollViewDelegate {
         }
     }
     
-    func killScroll() {
+    func killScrollIfNeed() {
+        
+        guard scrollBehavior == .pageByPage else { return }
+        
         let offset = self.scrollView.contentOffset;
         scrollView.setContentOffset(offset, animated: false)
     }

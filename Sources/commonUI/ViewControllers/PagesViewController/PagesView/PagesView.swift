@@ -7,10 +7,16 @@
 
 import UIKit
 
+public enum ScrollBehavior {
+    case pageByPage
+    case continuously
+}
+
 public protocol PagesView {
     var view: UIView! { get }
     var selectedPageIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
+    var scrollBehavior: ScrollBehavior { get set }
     var isClickable: Bool { get set }
 
     var dataSource: PagesViewDataSource? { get set }

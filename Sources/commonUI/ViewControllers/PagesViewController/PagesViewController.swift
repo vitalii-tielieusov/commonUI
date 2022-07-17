@@ -13,6 +13,7 @@ public protocol PagesViewController: NSObjectProtocol {
     var selectedViewController: UIViewController? { get }
     var selectedIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
+    var scrollBehavior: ScrollBehavior { get set }
     var isClickable: Bool { get set }
     
     func selectPage(at index: Int, animated: Bool)

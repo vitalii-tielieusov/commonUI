@@ -79,6 +79,15 @@ open class PagesViewControllerImpl: UIViewController, PagesViewController {
         }
     }
     
+    open var scrollBehavior: ScrollBehavior {
+        get {
+            return pagesView.scrollBehavior
+        }
+        set {
+            pagesView.scrollBehavior = newValue
+        }
+    }
+    
     open var isClickable: Bool {
         get {
             return pagesView.isClickable
