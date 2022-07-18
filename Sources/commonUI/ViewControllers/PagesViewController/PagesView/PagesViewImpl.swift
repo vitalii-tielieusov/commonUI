@@ -167,7 +167,7 @@ extension PagesViewImpl {
         //rightPageOffset
         let t3 = -(0.5 * pageWidth - 0.5 * w2 - delta)
         
-        if pageX > x + pageWidth {//TODO: Was '>=' Should check workflow
+        if pageX > x + pageWidth {
             return t3
         }
         
@@ -197,7 +197,7 @@ extension PagesViewImpl {
                                           secondFunctionKnownArgument: t1)
         }
         
-        if (x - pageX) > pageWidth {//TODO: Was '>=' Should check workflow
+        if (x - pageX) > pageWidth {
             return t1
         }
 
