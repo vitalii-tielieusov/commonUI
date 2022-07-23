@@ -133,7 +133,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
             make.height.equalTo(tabBarSize.height)
             make.width.equalTo(tabBarSize.width)
             make.centerX.equalToSuperview()
-            make.bottom.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview()
         }
         
         setupPagesViewController()
@@ -218,18 +218,11 @@ extension TabBarViewControllerImpl: UINavigationControllerDelegate {
     
     private func hideTabBar(hide: Bool) {
         
-        let bottomInset = hide ? -tabBarSize.height : 16
-
-//        UIView.animate(withDuration: 2, delay: 0, options: [.repeat, .autoreverse], animations: {
-//            self.tabBarView.snp.updateConstraints { make in
-//                make.bottom.equalToSuperview().inset(bottomInset)
-//            }
-//
-//            self.tabBarView.layoutIfNeeded()
-//        })
+        let bottomInset = hide ? -tabBarSize.height : 0
         
         tabBarView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(bottomInset)
         }
+        tabBarView.isHidden = hide
     }
 }
