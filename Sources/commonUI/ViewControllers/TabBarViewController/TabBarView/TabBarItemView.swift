@@ -23,16 +23,15 @@ private struct Constants {
 }
 
 public protocol TabBarItemViewDelegate: AnyObject {
-    func didClickItem(atIndex index: Int)
+    func didClickItem(withId id: UUID)
 }
 
 public protocol TabBarItemView: AnyObject {
     var isSelected: Bool { get set }
-    var index: Int { get }
+    var id: UUID { get }
     var delegate: TabBarItemViewDelegate? { get set }
     
     init(
-        index: Int,
         tabBarItemImage: UIImage?,
         selectedTabBarItemImage: UIImage?,
         title: String?
@@ -49,7 +48,7 @@ public class TabBarItemViewImpl: UIView, TabBarItemView {
         }
     }
 
-    public private(set) var index: Int
+    public private(set) var id = UUID()
     private var tabBarItemImage: UIImage?
     private var selectedTabBarItemImage: UIImage?
     private let title: String?
@@ -68,12 +67,10 @@ public class TabBarItemViewImpl: UIView, TabBarItemView {
     }()
     
     required public init(
-        index: Int,
         tabBarItemImage: UIImage?,
         selectedTabBarItemImage: UIImage?,
         title: String?
     ) {
-        self.index = index
         self.tabBarItemImage = tabBarItemImage
         self.selectedTabBarItemImage = selectedTabBarItemImage
         self.title = title
@@ -113,7 +110,7 @@ extension TabBarItemViewImpl {
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer) {
-        delegate?.didClickItem(atIndex: self.index)
+        delegate?.didClickItem(withId: self.id)
     }
     
     private func setupLayouts() {

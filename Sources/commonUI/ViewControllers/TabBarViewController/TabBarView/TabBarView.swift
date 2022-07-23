@@ -16,7 +16,7 @@ public protocol TabBar: AnyObject {
     
     var delegate: TabBarDelegate? { get set }
     
-    init(tabBarItems: [TabBarItemViewModel])
+    init(tabBarItems: [TabBarItem])
     
     func setupUI(tabBarItemWidth: CGFloat)
 }
@@ -24,7 +24,7 @@ public protocol TabBar: AnyObject {
 public class TabBarViewImpl: UIView, TabBar {
     
     public weak var delegate: TabBarDelegate?
-    private var tabBarItemViewModels: [TabBarItemViewModel]
+    private var tabBarItemViewModels: [TabBarItem]
     private var tabBarItemViews = [TabBarItemView & UIView]()
     public var selectedTabBarItem: Int = 0 {
         willSet {
@@ -41,7 +41,7 @@ public class TabBarViewImpl: UIView, TabBar {
         return stackView
     }()
     
-    required public init(tabBarItems: [TabBarItemViewModel]) {
+    required public init(tabBarItems: [TabBarItem]) {
         self.tabBarItemViewModels = tabBarItems
         
         super.init(frame: .zero)
@@ -84,9 +84,8 @@ extension TabBarViewImpl {
         
         for (index, tabBarItem) in tabBarItemViewModels.enumerated() {
             let tabBarItemView = TabBarItemViewImpl(
-                index: index,
-                tabBarItemImage: tabBarItem.tabBarItemImage,
-                selectedTabBarItemImage: tabBarItem.selectedTabBarItemImage,
+                tabBarItemImage: tabBarItem.image,
+                selectedTabBarItemImage: tabBarItem.selectedImage,
                 title: tabBarItem.title)
             tabBarItemView.isSelected = (index == selectedTabBarItem)
             tabBarItemView.delegate = self
@@ -99,33 +98,44 @@ extension TabBarViewImpl {
         }
     }
     
-    private func pageIndicatorViews() -> [TabBarItemViewImpl] {
-        guard let pageIndicators = stackView.arrangedSubviews as? [TabBarItemViewImpl] else {
+    private func pageIndicatorViews() -> [TabBarItemView] {
+        guard let pageIndicators = stackView.arrangedSubviews as? [TabBarItemView] else {
             return []
         }
         
         return pageIndicators
     }
     
-    func pageIndicatorView(atIndex index: Int) -> TabBarItemViewImpl? {
-        for view in pageIndicatorViews() {
-            if view.index == index {
-                return view
-            }
+    func pageIndicatorView(atIndex index: Int) -> TabBarItemView? {
+        guard pageIndicatorViews().count > index else {
+            return nil
         }
         
-        return nil
+        return pageIndicatorViews()[index]
     }
     
     func selectPage(atIndex index: Int) {
-        for view in pageIndicatorViews() {
-            view.isSelected = view.index == index
+        for (i, view) in pageIndicatorViews().enumerated() {
+            view.isSelected = (i == index)
         }
     }
 }
 
 extension TabBarViewImpl: TabBarItemViewDelegate {
-    public func didClickItem(atIndex index: Int) {
+    public func didClickItem(withId id: UUID) {
+        
+        let selectedTabBarItemIndex: Int? = {
+            for (i, view) in pageIndicatorViews().enumerated() {
+                if view.id == id {
+                    return i
+                }
+            }
+            
+            return nil
+        }()
+        
+        guard let index = selectedTabBarItemIndex else { return }
+        
         selectedTabBarItem = index
         delegate?.didClickTabBarItem(atIndex: index)
     }

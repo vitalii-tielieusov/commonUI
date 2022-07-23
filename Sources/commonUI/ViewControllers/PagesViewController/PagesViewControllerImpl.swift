@@ -55,9 +55,9 @@ open class PagesViewControllerImpl: UIViewController, PagesViewController {
     unowned(unsafe) open var selectedViewController: UIViewController? {
         
         guard let vc = _viewControllers,
-                selectedIndex != NSNotFound,
-                vc.count < selectedIndex else { return nil }
-        
+              selectedIndex != NSNotFound,
+              selectedIndex < vc.count  else { return nil }
+
         return vc[selectedIndex]
     }
     
