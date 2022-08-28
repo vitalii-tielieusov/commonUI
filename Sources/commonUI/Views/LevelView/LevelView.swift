@@ -160,3 +160,36 @@ extension LevelViewImpl: LevelIndicatorViewDelegate {
         delegate?.didSetLevel(level: level)
     }
 }
+
+extension LevelViewImpl {
+    override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            
+            if touch.location(in: self).x < 1 {
+                if self.level != 0 {
+                    self.level = 0
+                    delegate?.didSetLevel(level: 0)
+                }
+                return
+            }
+            
+            if touch.location(in: self).x > self.frame.width - 1 {
+                if self.level != 1 {
+                    self.level = 1
+                    delegate?.didSetLevel(level: 1)
+                }
+                return
+            }
+            
+            for view in levelIndicatorViews() {
+                let location = touch.location(in: view)
+                if location.x > 1 && location.x < view.frame.size.width {
+                    if self.level != view.level {
+                        self.level = view.level
+                        delegate?.didSetLevel(level: view.level)
+                    }
+                }
+            }
+        }
+    }
+}
