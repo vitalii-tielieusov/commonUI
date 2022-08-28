@@ -7,6 +7,12 @@
 
 import UIKit
 
+public enum IndicatorViewPosition {
+    case first
+    case middle
+    case last
+}
+
 public protocol LevelIndicatorViewDelegate: AnyObject {
     func didSelectView(withLevel level: CGFloat)
 }
@@ -18,14 +24,22 @@ public protocol LevelIndicatorView: AnyObject {
     
     init(
         level: CGFloat,
+        position: IndicatorViewPosition,
         fillColor: UIColor,
         emptyColor: UIColor
     )
 }
 
+private struct Constants {
+    static let levelViewCornerRadius = 5.0
+    static let levelViewBorderWidth = 0.5
+    static let levelViewBorderColor = UIColor(red: 10.0/255.0, green: 10.0/255.0, blue: 10.0/255.0, alpha: 1)
+}
+
 public class LevelIndicatorViewImpl: UIView, LevelIndicatorView {
 
     public let level: CGFloat
+    private let position: IndicatorViewPosition
     private let fillColor: UIColor
     private let emptyColor: UIColor
     public weak var delegate: LevelIndicatorViewDelegate?
@@ -39,18 +53,20 @@ public class LevelIndicatorViewImpl: UIView, LevelIndicatorView {
     private lazy var levelView: UIView = {
         let view = UIView()
         view.backgroundColor = emptyColor
-        view.layer.cornerRadius = 5
-        view.layer.borderWidth = 0.5
-        view.layer.borderColor = UIColor(red: 10.0/255.0, green: 10.0/255.0, blue: 10.0/255.0, alpha: 1).cgColor
+        view.layer.cornerRadius = Constants.levelViewCornerRadius
+        view.layer.borderWidth = Constants.levelViewBorderWidth
+        view.layer.borderColor = Constants.levelViewBorderColor.cgColor
         return view
     }()
     
     required public init(
         level: CGFloat,
+        position: IndicatorViewPosition,
         fillColor: UIColor,
         emptyColor: UIColor
     ) {
         self.level = level
+        self.position = position
         self.fillColor = fillColor
         self.emptyColor = emptyColor
         
@@ -72,6 +88,22 @@ extension LevelIndicatorViewImpl {
     
     private func setupViews() {
         addSubview(levelView)
+
+        let roundedCorners: [UIView.Corner] = {
+            switch position {
+            case .first:
+                return [.bottomLeft, .topLeft, .topRight]
+            case .middle:
+                return [.topLeft, .topRight]
+            case .last:
+                return [.bottomRight, .topLeft, .topRight]
+            }
+        }()
+        levelView.setupCorners(
+            cornerRadius: Constants.levelViewCornerRadius,
+            borderWidth: Constants.levelViewBorderWidth,
+            borderColor: Constants.levelViewBorderColor,
+            corners: roundedCorners)
         
         self.backgroundColor = emptyColor
         

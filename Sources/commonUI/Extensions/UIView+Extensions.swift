@@ -20,3 +20,46 @@ extension Array where Element: UIView {
     }
 }
 
+extension UIView {
+    
+    public enum Corner {
+        case topLeft
+        case topRight
+        case bottomLeft
+        case bottomRight
+    }
+    
+    public func setupCorners(
+        cornerRadius: CGFloat,
+        borderWidth: CGFloat,
+        borderColor: UIColor,
+        corners: [Corner]
+    ) {
+        self.layer.cornerRadius = cornerRadius
+        self.layer.borderWidth = borderWidth
+        self.layer.borderColor = borderColor.cgColor
+        
+        self.layer.maskedCorners = convert(corners: corners)
+    }
+    
+    private func convert(corners: [Corner]) -> CACornerMask {
+        var result = CACornerMask()
+        for corner in corners {
+            result.insert(convert(corner: corner))
+        }
+        return result
+    }
+    
+    private func convert(corner: Corner) -> CACornerMask {
+        switch corner {
+        case .topLeft:
+            return .layerMinXMinYCorner
+        case .topRight:
+            return .layerMaxXMinYCorner
+        case .bottomLeft:
+            return .layerMinXMaxYCorner
+        case .bottomRight:
+            return .layerMaxXMaxYCorner
+        }
+    }
+}

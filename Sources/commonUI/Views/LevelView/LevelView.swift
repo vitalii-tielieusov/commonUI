@@ -103,8 +103,20 @@ extension LevelViewImpl {
                 return currentLevel
             }()
             
+            let indicatorPosition: IndicatorViewPosition = {
+                switch index {
+                case 0:
+                    return .first
+                case indicatorsCount - 1:
+                    return .last
+                default:
+                    return .middle
+                }
+            }()
+            
             let indicatorView = LevelIndicatorViewImpl(
                 level: indicatorLevel,
+                position: indicatorPosition,
                 fillColor: fillColor,
                 emptyColor: emptyColor)
 
