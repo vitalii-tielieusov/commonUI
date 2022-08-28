@@ -154,7 +154,7 @@ extension PageIndicatorViewImpl {
     }
 }
 
-extension UIView{
+extension UIView {
     func rotate(angle: CGFloat, duration: CFTimeInterval) {
         let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotation.toValue = NSNumber(value: angle)
