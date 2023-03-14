@@ -166,8 +166,8 @@ extension PagesViewImpl {
         let t2 = 0.5 * (pageWidth - w2)
         //rightPageOffset
         let t3 = -(0.5 * pageWidth - 0.5 * w2 - delta)
-        
-        if pageX > x + pageWidth {
+
+        if pageX >= x + pageWidth {
             return t3
         }
         
@@ -197,7 +197,7 @@ extension PagesViewImpl {
                                           secondFunctionKnownArgument: t1)
         }
         
-        if (x - pageX) > pageWidth {
+        if (x - pageX) >= pageWidth {
             return t1
         }
 
