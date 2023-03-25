@@ -155,11 +155,11 @@ extension PagesViewControllerImpl: PagesViewDataSource {
 extension PagesViewControllerImpl: PagesViewDelegate {
     
     public func didScroll(to pageIndex: Int) {
-        delegate?.didSelect(pageAtIndex: pageIndex)
+        delegate?.didSelect(self, pageAtIndex: pageIndex)
     }
     
     public func didScroll(contentOffset: CGPoint) {
-        delegate?.didScroll(contentOffset: contentOffset)
+        delegate?.didScroll(self, contentOffset: contentOffset)
     }
     
     public func didClickOnRightPageSide() {
