@@ -46,10 +46,10 @@ public struct SizeRatio {
  SizeRatio property values must be between 0 and 1
  */
 public protocol PagesLayoutDelegate: AnyObject {
-    func leftPageSizeRatio() -> SizeRatio
-    func middlePageSizeRatio() -> SizeRatio
-    func rightPageSizeRatio() -> SizeRatio
-    func horizontalPagesSpaces() -> CGFloat
-    func verticalPagesAlignment() -> VerticalPagesAlignment
-    func pagesCornerRadius() -> CGFloat
+    func leftPageSizeRatio(_ pagesController: UIViewController) -> SizeRatio
+    func middlePageSizeRatio(_ pagesController: UIViewController) -> SizeRatio
+    func rightPageSizeRatio(_ pagesController: UIViewController) -> SizeRatio
+    func horizontalPagesSpaces(_ pagesController: UIViewController) -> CGFloat
+    func verticalPagesAlignment(_ pagesController: UIViewController) -> VerticalPagesAlignment
+    func pagesCornerRadius(_ pagesController: UIViewController) -> CGFloat
 }

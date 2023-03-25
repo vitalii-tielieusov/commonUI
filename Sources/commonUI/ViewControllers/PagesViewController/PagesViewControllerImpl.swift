@@ -168,8 +168,8 @@ extension PagesViewControllerImpl: PagesViewLayoutDelegate {
 
         guard let layoutDelegate = layoutDelegate else { return PageSize.full }
 
-        let width = viewSize().width * layoutDelegate.leftPageSizeRatio().widthRatio
-        let height = viewSize().height * layoutDelegate.leftPageSizeRatio().heightRatio
+        let width = viewSize().width * layoutDelegate.leftPageSizeRatio(self).widthRatio
+        let height = viewSize().height * layoutDelegate.leftPageSizeRatio(self).heightRatio
 
         return PageSize.specified(size: CGSize(width: width, height: height))
     }
@@ -178,8 +178,8 @@ extension PagesViewControllerImpl: PagesViewLayoutDelegate {
 
         guard let layoutDelegate = layoutDelegate else { return PageSize.full }
         
-        let width = viewSize().width * layoutDelegate.middlePageSizeRatio().widthRatio
-        let height = viewSize().height * layoutDelegate.middlePageSizeRatio().heightRatio
+        let width = viewSize().width * layoutDelegate.middlePageSizeRatio(self).widthRatio
+        let height = viewSize().height * layoutDelegate.middlePageSizeRatio(self).heightRatio
 
         return PageSize.specified(size: CGSize(width: width, height: height))
     }
@@ -188,24 +188,24 @@ extension PagesViewControllerImpl: PagesViewLayoutDelegate {
 
         guard let layoutDelegate = layoutDelegate else { return PageSize.full }
         
-        let width = viewSize().width * layoutDelegate.rightPageSizeRatio().widthRatio
-        let height = viewSize().height * layoutDelegate.rightPageSizeRatio().heightRatio
+        let width = viewSize().width * layoutDelegate.rightPageSizeRatio(self).widthRatio
+        let height = viewSize().height * layoutDelegate.rightPageSizeRatio(self).heightRatio
 
         return PageSize.specified(size: CGSize(width: width, height: height))
     }
 
     public func horizontalPagesSpaces() -> CGFloat {
         guard let layoutDelegate = layoutDelegate else { return 0 }
-        return layoutDelegate.horizontalPagesSpaces()
+        return layoutDelegate.horizontalPagesSpaces(self)
     }
 
     public func verticalPagesAlignment() -> VerticalPagesAlignment {
         guard let layoutDelegate = layoutDelegate else { return .middle }
-        return layoutDelegate.verticalPagesAlignment()
+        return layoutDelegate.verticalPagesAlignment(self)
     }
 
     public func pagesCornerRadius() -> CGFloat {
         guard let layoutDelegate = layoutDelegate else { return 0 }
-        return layoutDelegate.pagesCornerRadius()
+        return layoutDelegate.pagesCornerRadius(self)
     }
 }
