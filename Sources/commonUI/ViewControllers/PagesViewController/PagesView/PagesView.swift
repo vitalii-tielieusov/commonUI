@@ -16,6 +16,7 @@ public protocol PagesView {
     var view: UIView! { get }
     var selectedPageIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
+    var contentOffset: CGPoint { get set }
     var scrollBehavior: ScrollBehavior { get set }
     var isClickable: Bool { get set }
 
@@ -36,8 +37,13 @@ public protocol PagesViewDataSource: AnyObject {
 
 public protocol PagesViewDelegate: AnyObject {
     func didScroll(to pageIndex: Int)
+    func didScroll(contentOffset: CGPoint)
     func didClickOnRightPageSide()
     func didClickOnLeftPageSide()
+}
+
+public extension PagesViewDelegate {
+    func didScroll(contentOffset: CGPoint) { }
 }
 
 public enum VerticalPagesAlignment {

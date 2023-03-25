@@ -79,6 +79,15 @@ open class PagesViewControllerImpl: UIViewController, PagesViewController {
         }
     }
     
+    open var contentOffset: CGPoint {
+        get {
+            return pagesView.contentOffset
+        }
+        set {
+            pagesView.contentOffset = newValue
+        }
+    }
+    
     open var scrollBehavior: ScrollBehavior {
         get {
             return pagesView.scrollBehavior
@@ -147,6 +156,10 @@ extension PagesViewControllerImpl: PagesViewDelegate {
     
     public func didScroll(to pageIndex: Int) {
         delegate?.didSelect(pageAtIndex: pageIndex)
+    }
+    
+    public func didScroll(contentOffset: CGPoint) {
+        delegate?.didScroll(contentOffset: contentOffset)
     }
     
     public func didClickOnRightPageSide() {

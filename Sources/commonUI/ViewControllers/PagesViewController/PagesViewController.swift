@@ -13,6 +13,7 @@ public protocol PagesViewController: NSObjectProtocol {
     var selectedViewController: UIViewController? { get }
     var selectedIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
+    var contentOffset: CGPoint { get set }
     var scrollBehavior: ScrollBehavior { get set }
     var isClickable: Bool { get set }
     
@@ -26,10 +27,12 @@ public protocol PagesViewController: NSObjectProtocol {
 
 public protocol PagesViewControllerDelegate: NSObjectProtocol {
     func didSelect(pageAtIndex: Int)
+    func didScroll(contentOffset: CGPoint)
 }
 
 public extension PagesViewControllerDelegate {
     func didSelect(pageAtIndex: Int) { }
+    func didScroll(contentOffset: CGPoint) { }
 }
 
 public struct SizeRatio {

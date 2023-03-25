@@ -417,6 +417,15 @@ extension PagesViewImpl: PagesView {
         }
     }
     
+    var contentOffset: CGPoint {
+        get {
+            return scrollView.contentOffset
+        }
+        set {
+            scrollView.contentOffset = newValue
+        }
+    }
+    
     var isClickable: Bool {
         get {
             return shouldAddTapGestureRecognizer
@@ -492,6 +501,8 @@ extension PagesViewImpl: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
             
+        delegate?.didScroll(contentOffset: scrollView.contentOffset)
+        
         remakeContentConstraints()
 
         switch scrollView.panGestureRecognizer.state {
