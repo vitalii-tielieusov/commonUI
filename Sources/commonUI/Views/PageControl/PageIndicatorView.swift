@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum RotationDiraction {
+public enum RotationDirection {
     case clockwise
     case anticlockwise
     
@@ -28,30 +28,33 @@ public protocol PageIndicatorViewDelegate: AnyObject {
 public protocol PageIndicatorView: AnyObject {
     var isCurrent: Bool { get set }
     var index: Int { get }
-    var rotationDiraction: RotationDiraction { get set }
+    var rotationDirection: RotationDirection { get set }
     var delegate: PageIndicatorViewDelegate? { get set }
     
     init(
         index: Int,
         pageIndicatorImage: UIImage?,
-        currentPageIndicatorImage: UIImage?
+        currentPageIndicatorImage: UIImage?,
+        animatePageIndicator: Bool,
+        rotatePageIndicator: Bool
     )
 }
 
 public class PageIndicatorViewImpl: UIView, PageIndicatorView {
-
     public var isCurrent: Bool = false {
         didSet {
             guard oldValue != isCurrent else { return }
             
-            setupAsCurrent(isCurrent)
+            setupAsCurrent(isCurrent, animate: self.animatePageIndicator, rotate: self.rotatePageIndicator)
         }
     }
 
     public private(set) var index: Int
-    public var rotationDiraction: RotationDiraction = .clockwise
+    public var rotationDirection: RotationDirection = .clockwise
     private var pageIndicatorImage: UIImage?
     private var currentPageIndicatorImage: UIImage?
+    private let animatePageIndicator: Bool
+    private let rotatePageIndicator: Bool
     
     public weak var delegate: PageIndicatorViewDelegate?
     
@@ -63,17 +66,21 @@ public class PageIndicatorViewImpl: UIView, PageIndicatorView {
     required public init(
         index: Int,
         pageIndicatorImage: UIImage?,
-        currentPageIndicatorImage: UIImage?
+        currentPageIndicatorImage: UIImage?,
+        animatePageIndicator: Bool,
+        rotatePageIndicator: Bool
     ) {
         self.index = index
         self.pageIndicatorImage = pageIndicatorImage
         self.currentPageIndicatorImage = currentPageIndicatorImage
+        self.animatePageIndicator = animatePageIndicator
+        self.rotatePageIndicator = rotatePageIndicator
         
         super.init(frame: .zero)
         
         setupViews()
         setupLayouts()
-        setupAsCurrent(isCurrent)
+        setupAsCurrent(isCurrent, animate: self.animatePageIndicator, rotate: self.rotatePageIndicator)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -108,22 +115,24 @@ extension PageIndicatorViewImpl {
         }
     }
     
-    private func setupAsCurrent(_ isCurrent: Bool, animate: Bool = true) {
+    private func setupAsCurrent(_ isCurrent: Bool, animate: Bool = true, rotate: Bool = true) {
         let toImage = isCurrent ? currentPageIndicatorImage : pageIndicatorImage
 
         if animate {
             
             if isCurrent {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + (animate ? 0.3 : 0.0)) { [weak self] in
 
                     guard let self = self else { return }
 
-                    let angle = self.rotationDiraction.rotationAngle
-                    self.imageView.rotate(angle: angle, duration: 0.3)
+                    if rotate {
+                        let angle = self.rotationDirection.rotationAngle
+                        self.imageView.rotate(angle: angle, duration: (animate ? 0.3 : 0.0))
+                    }
 
                 UIView.transition(
                     with: self.imageView,
-                    duration: 0.3,
+                    duration: (animate ? 0.3 : 0.0),
                     options: .curveLinear,
                     animations: { [weak self] in
                         self?.imageView.image = toImage
@@ -131,16 +140,18 @@ extension PageIndicatorViewImpl {
                     completion: nil)
                 }
             } else {
-                let angle = rotationDiraction.rotationAngle
-                imageView.rotate(angle: angle, duration: 0.6)
+                if rotate {
+                    let angle = rotationDirection.rotationAngle
+                    imageView.rotate(angle: angle, duration: (animate ? 0.6 : 0.0))
+                }
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + (animate ? 0.3 : 0.0)) { [weak self] in
 
                     guard let imageView = self?.imageView else { return }
 
                     UIView.transition(
                         with: imageView,
-                        duration: 0.3,
+                        duration: (animate ? 0.3 : 0.0),
                         options: .curveLinear,
                         animations: { [weak self] in
                             self?.imageView.image = toImage
@@ -149,6 +160,12 @@ extension PageIndicatorViewImpl {
                 }
             }
         } else {
+
+            if rotate {
+                let angle = self.rotationDirection.rotationAngle
+                self.imageView.rotate(angle: angle, duration:  0.0)
+            }
+
             imageView.image = isCurrent ? currentPageIndicatorImage : pageIndicatorImage
         }
     }

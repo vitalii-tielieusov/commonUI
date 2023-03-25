@@ -20,7 +20,9 @@ public protocol PageControl: AnyObject {
     init(
         numberOfPages: Int,
         pageIndicatorImage: UIImage?,
-        currentPageIndicatorImage: UIImage?
+        currentPageIndicatorImage: UIImage?,
+        animatePageIndicator: Bool,
+        rotatePageIndicator: Bool
     )
 }
 
@@ -38,6 +40,8 @@ public class PageControlImpl: UIView, PageControl {
 
     private var pageIndicatorImage: UIImage?
     private var currentPageIndicatorImage: UIImage?
+    private var animatePageIndicator: Bool
+    private var rotatePageIndicator: Bool
     
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -49,11 +53,15 @@ public class PageControlImpl: UIView, PageControl {
     required public init(
         numberOfPages: Int,
         pageIndicatorImage: UIImage?,
-        currentPageIndicatorImage: UIImage?
+        currentPageIndicatorImage: UIImage?,
+        animatePageIndicator: Bool,
+        rotatePageIndicator: Bool
     ) {
         self.numberOfPages = numberOfPages
         self.pageIndicatorImage = pageIndicatorImage
         self.currentPageIndicatorImage = currentPageIndicatorImage
+        self.animatePageIndicator = animatePageIndicator
+        self.rotatePageIndicator = rotatePageIndicator
         
         super.init(frame: .zero)
         
@@ -89,7 +97,9 @@ extension PageControlImpl {
             let pageIndicator = PageIndicatorViewImpl(
                 index: pageIndex,
                 pageIndicatorImage: pageIndicatorImage,
-                currentPageIndicatorImage: currentPageIndicatorImage)
+                currentPageIndicatorImage: currentPageIndicatorImage,
+                animatePageIndicator: self.animatePageIndicator,
+                rotatePageIndicator: self.rotatePageIndicator)
             pageIndicator.delegate = self
             stackView.addArrangedSubview(pageIndicator)
         }
@@ -115,7 +125,9 @@ extension PageControlImpl {
     
     func selectPage(atIndex index: Int) {
         for view in pageIndicatorViews() {
-            view.rotationDiraction = currentPage < index ? .clockwise : .anticlockwise
+            if rotatePageIndicator {
+                view.rotationDirection = currentPage < index ? .clockwise : .anticlockwise
+            }
             view.isCurrent = view.index == index
         }
     }
