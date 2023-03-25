@@ -42,6 +42,10 @@ public struct SizeRatio {
     }
 }
 
+extension SizeRatio {
+    public static var equal: SizeRatio { SizeRatio(widthRatio: 1.0, heightRatio: 1.0) }
+}
+
 /*
  SizeRatio property values must be between 0 and 1
  */
