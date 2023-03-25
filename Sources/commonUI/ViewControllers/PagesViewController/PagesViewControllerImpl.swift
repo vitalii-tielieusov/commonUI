@@ -195,14 +195,17 @@ extension PagesViewControllerImpl: PagesViewLayoutDelegate {
     }
 
     public func horizontalPagesSpaces() -> CGFloat {
-        return -5
+        guard let layoutDelegate = layoutDelegate else { return 0 }
+        return layoutDelegate.horizontalPagesSpaces()
     }
 
     public func verticalPagesAlignment() -> VerticalPagesAlignment {
-        return .middle
+        guard let layoutDelegate = layoutDelegate else { return .middle }
+        return layoutDelegate.verticalPagesAlignment()
     }
 
     public func pagesCornerRadius() -> CGFloat {
-        return 0
+        guard let layoutDelegate = layoutDelegate else { return 0 }
+        return layoutDelegate.pagesCornerRadius()
     }
 }
