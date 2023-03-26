@@ -30,6 +30,7 @@ public protocol TabBarViewController {
     var viewControllers: [UIViewController]? { get }
     var selectedViewController: UIViewController? { get }
     var selectedIndex: Int { get set }
+    var tabBarBackgroundColor: UIColor? { get set }
     
     init?(viewControllers: [TabBarItemViewController]?,
           tabBarItems: [TabBarItem]?,
@@ -68,6 +69,15 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         }
         set {
             pagesView.selectedIndex = newValue
+        }
+    }
+    
+    public var tabBarBackgroundColor: UIColor? {
+        get {
+            return tabBarView.backgroundColor
+        }
+        set {
+            tabBarView.backgroundColor = newValue
         }
     }
     
