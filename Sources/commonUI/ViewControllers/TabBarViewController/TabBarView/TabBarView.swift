@@ -18,7 +18,7 @@ public protocol TabBar: AnyObject {
     
     init(tabBarItems: [TabBarItem])
     
-    func setupUI(tabBarItemWidth: CGFloat)
+    func setupUI(backgroundColor: UIColor?, tabBarItemWidth: CGFloat)
 }
 
 public class TabBarViewImpl: UIView, TabBar {
@@ -47,13 +47,15 @@ public class TabBarViewImpl: UIView, TabBar {
         super.init(frame: .zero)
     }
     
-    public func setupUI(tabBarItemWidth: CGFloat) {
+    public func setupUI(backgroundColor: UIColor?, tabBarItemWidth: CGFloat) {
         
         setupViews()
         setupLayouts()
         
         setupStackView(tabBarItemWidth: tabBarItemWidth)
         selectPage(atIndex: selectedTabBarItem)
+        
+        self.backgroundColor = backgroundColor
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -30,11 +30,11 @@ public protocol TabBarViewController {
     var viewControllers: [UIViewController]? { get }
     var selectedViewController: UIViewController? { get }
     var selectedIndex: Int { get set }
-    var tabBarBackgroundColor: UIColor? { get set }
     
     init?(viewControllers: [TabBarItemViewController]?,
           tabBarItems: [TabBarItem]?,
           tabBarSize: CGSize,
+          tabBarBackgroundColor: UIColor?,
           hideNavigationBar: Bool)
     
     var delegate: TabBarViewControllerDelegate? { get set }
@@ -54,6 +54,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
     private var _viewControllers: [UIViewController]
     private let hideNavigationBar: Bool
     private let tabBarSize: CGSize
+    private let tabBarBackgroundColor: UIColor?
     
     public var viewControllers: [UIViewController]? {
         return pagesView.viewControllers
@@ -72,15 +73,6 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         }
     }
     
-    public var tabBarBackgroundColor: UIColor? {
-        get {
-            return tabBarView.backgroundColor
-        }
-        set {
-            tabBarView.backgroundColor = newValue
-        }
-    }
-    
     public var rootView: UIView {
         return self.view
     }
@@ -91,6 +83,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         viewControllers: [TabBarItemViewController]?,
         tabBarItems: [TabBarItem]?,
         tabBarSize: CGSize,
+        tabBarBackgroundColor: UIColor?,
         hideNavigationBar: Bool
     ) {
         
@@ -104,6 +97,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         self.tabBarView = TabBarViewImpl(tabBarItems: tbis)
         self._viewControllers = vcs
         self.tabBarSize = tabBarSize
+        self.tabBarBackgroundColor = tabBarBackgroundColor
         self.hideNavigationBar = hideNavigationBar
         super.init(nibName: nil, bundle: nil)
     }
@@ -171,7 +165,10 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
             return tabBarSize.width / CGFloat(_viewControllers.count)
         }()
         
-        tabBarView.setupUI(tabBarItemWidth: tabBarItemWidth)
+        tabBarView.setupUI(
+            backgroundColor: tabBarBackgroundColor,
+            tabBarItemWidth: tabBarItemWidth
+        )
     }
 }
 
