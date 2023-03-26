@@ -34,6 +34,7 @@ public protocol TabBarViewController {
     init?(viewControllers: [TabBarItemViewController]?,
           tabBarItems: [TabBarItem]?,
           tabBarSize: CGSize,
+          tabBarTopInset: CGFloat,
           tabBarBackgroundColor: UIColor?,
           hideNavigationBar: Bool)
     
@@ -54,6 +55,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
     private var _viewControllers: [UIViewController]
     private let hideNavigationBar: Bool
     private let tabBarSize: CGSize
+    private let tabBarViewTopInset: CGFloat
     private let tabBarBackgroundColor: UIColor?
     
     public var viewControllers: [UIViewController]? {
@@ -83,6 +85,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         viewControllers: [TabBarItemViewController]?,
         tabBarItems: [TabBarItem]?,
         tabBarSize: CGSize,
+        tabBarTopInset: CGFloat = 0,
         tabBarBackgroundColor: UIColor?,
         hideNavigationBar: Bool
     ) {
@@ -97,6 +100,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         self.tabBarView = TabBarViewImpl(tabBarItems: tbis)
         self._viewControllers = vcs
         self.tabBarSize = tabBarSize
+        self.tabBarViewTopInset = tabBarTopInset
         self.tabBarBackgroundColor = tabBarBackgroundColor
         self.hideNavigationBar = hideNavigationBar
         super.init(nibName: nil, bundle: nil)
@@ -121,9 +125,9 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
 
         view.addSubview(pagesView.rootView)
         view.addSubview(tabBarView)
-        view.backgroundColor = .white
         
-        tabBarView.backgroundColor = .white
+        view.backgroundColor = tabBarBackgroundColor
+        tabBarView.backgroundColor = tabBarBackgroundColor
     }
 
     private func setupLayouts() {
@@ -134,7 +138,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         }
         
         tabBarView.snp.makeConstraints { make in
-            make.height.equalTo(tabBarSize.height)
+            make.height.equalTo(tabBarSize.height + tabBarViewTopInset)
             make.width.equalTo(tabBarSize.width)
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview()
@@ -166,7 +170,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         }()
         
         tabBarView.setupUI(
-            backgroundColor: tabBarBackgroundColor,
+            tabBarTopOffset: tabBarViewTopInset,
             tabBarItemWidth: tabBarItemWidth
         )
     }
@@ -225,7 +229,7 @@ extension TabBarViewControllerImpl: UINavigationControllerDelegate {
     
     private func hideTabBar(hide: Bool) {
         
-        let bottomInset = hide ? -tabBarSize.height : 0
+        let bottomInset = hide ? -(tabBarSize.height + tabBarViewTopInset) : 0
         
         tabBarView.snp.updateConstraints { make in
             make.bottom.equalToSuperview().inset(bottomInset)

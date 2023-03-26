@@ -18,7 +18,7 @@ public protocol TabBar: AnyObject {
     
     init(tabBarItems: [TabBarItem])
     
-    func setupUI(backgroundColor: UIColor?, tabBarItemWidth: CGFloat)
+    func setupUI(tabBarTopOffset: CGFloat, tabBarItemWidth: CGFloat)
 }
 
 public class TabBarViewImpl: UIView, TabBar {
@@ -26,6 +26,7 @@ public class TabBarViewImpl: UIView, TabBar {
     public weak var delegate: TabBarDelegate?
     private var tabBarItemViewModels: [TabBarItem]
     private var tabBarItemViews = [TabBarItemView & UIView]()
+    private var tabBarTopOffset: CGFloat = 0
     public var selectedTabBarItem: Int = 0 {
         willSet {
             guard newValue != selectedTabBarItem else { return }
@@ -47,15 +48,15 @@ public class TabBarViewImpl: UIView, TabBar {
         super.init(frame: .zero)
     }
     
-    public func setupUI(backgroundColor: UIColor?, tabBarItemWidth: CGFloat) {
+    public func setupUI(tabBarTopOffset: CGFloat, tabBarItemWidth: CGFloat) {
+        
+        self.tabBarTopOffset = tabBarTopOffset
         
         setupViews()
         setupLayouts()
         
         setupStackView(tabBarItemWidth: tabBarItemWidth)
         selectPage(atIndex: selectedTabBarItem)
-        
-        self.backgroundColor = backgroundColor
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -74,7 +75,8 @@ extension TabBarViewImpl {
     
     private func setupLayouts() {
         stackView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalToSuperview().offset(tabBarTopOffset)
+            make.left.right.bottom.equalToSuperview()
         }
     }
     
