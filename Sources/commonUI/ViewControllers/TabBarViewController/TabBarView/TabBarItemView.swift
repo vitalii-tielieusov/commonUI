@@ -34,7 +34,9 @@ public protocol TabBarItemView: AnyObject {
     init(
         tabBarItemImage: UIImage?,
         selectedTabBarItemImage: UIImage?,
-        title: String?
+        title: String?,
+        font: UIFont?,
+        textColor: UIColor?
     )
 }
 
@@ -52,6 +54,8 @@ public class TabBarItemViewImpl: UIView, TabBarItemView {
     private var tabBarItemImage: UIImage?
     private var selectedTabBarItemImage: UIImage?
     private let title: String?
+    private let font: UIFont?
+    private let textColor: UIColor?
     
     public weak var delegate: TabBarItemViewDelegate?
     
@@ -69,11 +73,15 @@ public class TabBarItemViewImpl: UIView, TabBarItemView {
     required public init(
         tabBarItemImage: UIImage?,
         selectedTabBarItemImage: UIImage?,
-        title: String?
+        title: String?,
+        font: UIFont?,
+        textColor: UIColor?
     ) {
         self.tabBarItemImage = tabBarItemImage
         self.selectedTabBarItemImage = selectedTabBarItemImage
         self.title = title
+        self.font = font
+        self.textColor = textColor
         
         super.init(frame: .zero)
         
@@ -98,7 +106,8 @@ extension TabBarItemViewImpl {
         
         label.text = title
         label.textAlignment = .center
-        label.textColor = Constants.labelTextColor
+        label.textColor = textColor ?? Constants.labelTextColor
+        label.font = font ?? Constants.labelFont
         
         addTapGestureRecognizer()
     }

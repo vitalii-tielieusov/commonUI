@@ -90,7 +90,9 @@ extension TabBarViewImpl {
             let tabBarItemView = TabBarItemViewImpl(
                 tabBarItemImage: tabBarItem.image,
                 selectedTabBarItemImage: tabBarItem.selectedImage,
-                title: tabBarItem.title)
+                title: tabBarItem.title,
+                font: tabBarItem.font,
+                textColor: tabBarItem.textColor)
             tabBarItemView.isSelected = (index == selectedTabBarItem)
             tabBarItemView.delegate = self
             
