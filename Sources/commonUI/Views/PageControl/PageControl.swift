@@ -19,6 +19,7 @@ public protocol PageControl: AnyObject {
     
     init(
         numberOfPages: Int,
+        spacing: CGFloat,
         pageIndicatorImage: UIImage?,
         currentPageIndicatorImage: UIImage?,
         animatePageIndicator: Bool,
@@ -38,6 +39,7 @@ public class PageControlImpl: UIView, PageControl {
         }
     }
 
+    private var spacing: CGFloat
     private var pageIndicatorImage: UIImage?
     private var currentPageIndicatorImage: UIImage?
     private var animatePageIndicator: Bool
@@ -52,12 +54,14 @@ public class PageControlImpl: UIView, PageControl {
     
     required public init(
         numberOfPages: Int,
+        spacing: CGFloat,
         pageIndicatorImage: UIImage?,
         currentPageIndicatorImage: UIImage?,
         animatePageIndicator: Bool,
         rotatePageIndicator: Bool
     ) {
         self.numberOfPages = numberOfPages
+        self.spacing = spacing
         self.pageIndicatorImage = pageIndicatorImage
         self.currentPageIndicatorImage = currentPageIndicatorImage
         self.animatePageIndicator = animatePageIndicator
@@ -93,6 +97,7 @@ extension PageControlImpl {
     }
     
     private func setupStackView() {
+        stackView.spacing = spacing
         for pageIndex in 0 ..< numberOfPages {
             let pageIndicator = PageIndicatorViewImpl(
                 index: pageIndex,
