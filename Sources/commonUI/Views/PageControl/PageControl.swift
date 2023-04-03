@@ -12,6 +12,17 @@ public struct PageControlShadowParams {
     let shadowOpacity: Float
     let shadowOffset: CGSize
     let shadowRadius: CGFloat
+    public init(
+        shadowColor: CGColor?,
+        shadowOpacity: Float,
+        shadowOffset: CGSize,
+        shadowRadius: CGFloat
+    ) {
+        self.shadowColor = shadowColor
+        self.shadowOpacity = shadowOpacity
+        self.shadowOffset = shadowOffset
+        self.shadowRadius = shadowRadius
+    }
 }
 
 public protocol PageControlDelegate: AnyObject {
