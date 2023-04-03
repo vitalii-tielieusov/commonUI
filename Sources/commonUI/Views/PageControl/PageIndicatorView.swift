@@ -60,6 +60,7 @@ public class PageIndicatorViewImpl: UIView, PageIndicatorView {
     
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .center
         return imageView
     }()
     
@@ -112,10 +113,6 @@ extension PageIndicatorViewImpl {
     private func setupLayouts() {
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            if let imageSize = imageView.image?.size {
-                make.width.equalTo(imageSize.width)
-                make.height.equalTo(imageSize.height)
-            }
         }
     }
     

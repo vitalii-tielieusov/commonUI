@@ -19,6 +19,7 @@ public protocol PageControl: AnyObject {
     
     init(
         numberOfPages: Int,
+        pageSize: CGSize,
         spacing: CGFloat,
         pageIndicatorImage: UIImage?,
         currentPageIndicatorImage: UIImage?,
@@ -39,6 +40,7 @@ public class PageControlImpl: UIView, PageControl {
         }
     }
 
+    private let pageSize: CGSize
     private var spacing: CGFloat
     private var pageIndicatorImage: UIImage?
     private var currentPageIndicatorImage: UIImage?
@@ -54,6 +56,7 @@ public class PageControlImpl: UIView, PageControl {
     
     required public init(
         numberOfPages: Int,
+        pageSize: CGSize,
         spacing: CGFloat,
         pageIndicatorImage: UIImage?,
         currentPageIndicatorImage: UIImage?,
@@ -61,6 +64,7 @@ public class PageControlImpl: UIView, PageControl {
         rotatePageIndicator: Bool
     ) {
         self.numberOfPages = numberOfPages
+        self.pageSize = pageSize
         self.spacing = spacing
         self.pageIndicatorImage = pageIndicatorImage
         self.currentPageIndicatorImage = currentPageIndicatorImage
@@ -107,6 +111,11 @@ extension PageControlImpl {
                 rotatePageIndicator: self.rotatePageIndicator)
             pageIndicator.delegate = self
             stackView.addArrangedSubview(pageIndicator)
+            
+            pageIndicator.snp.makeConstraints { make in
+                make.width.equalTo(pageSize.width)
+                make.height.equalTo(pageSize.height)
+            }
         }
     }
     
