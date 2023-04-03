@@ -7,6 +7,13 @@
 
 import UIKit
 
+public struct PageControlShadowParams {
+    let shadowColor: CGColor?
+    let shadowOpacity: Float
+    let shadowOffset: CGSize
+    let shadowRadius: CGFloat
+}
+
 public protocol PageControlDelegate: AnyObject {
     func didClickPage(atIndex index: Int)
 }
@@ -23,6 +30,7 @@ public protocol PageControl: AnyObject {
         spacing: CGFloat,
         pageIndicatorImage: UIImage?,
         currentPageIndicatorImage: UIImage?,
+        pageIndicatorShadow: PageControlShadowParams?,
         animatePageIndicator: Bool,
         rotatePageIndicator: Bool
     )
@@ -44,6 +52,7 @@ public class PageControlImpl: UIView, PageControl {
     private var spacing: CGFloat
     private var pageIndicatorImage: UIImage?
     private var currentPageIndicatorImage: UIImage?
+    private var pageIndicatorShadow: PageControlShadowParams?
     private var animatePageIndicator: Bool
     private var rotatePageIndicator: Bool
     
@@ -60,6 +69,7 @@ public class PageControlImpl: UIView, PageControl {
         spacing: CGFloat,
         pageIndicatorImage: UIImage?,
         currentPageIndicatorImage: UIImage?,
+        pageIndicatorShadow: PageControlShadowParams?,
         animatePageIndicator: Bool,
         rotatePageIndicator: Bool
     ) {
@@ -68,6 +78,7 @@ public class PageControlImpl: UIView, PageControl {
         self.spacing = spacing
         self.pageIndicatorImage = pageIndicatorImage
         self.currentPageIndicatorImage = currentPageIndicatorImage
+        self.pageIndicatorShadow = pageIndicatorShadow
         self.animatePageIndicator = animatePageIndicator
         self.rotatePageIndicator = rotatePageIndicator
         
@@ -115,6 +126,13 @@ extension PageControlImpl {
             pageIndicator.snp.makeConstraints { make in
                 make.width.equalTo(pageSize.width)
                 make.height.equalTo(pageSize.height)
+            }
+            
+            if let pageIndicatorShadow {
+                pageIndicator.layer.shadowColor = pageIndicatorShadow.shadowColor
+                pageIndicator.layer.shadowOpacity = pageIndicatorShadow.shadowOpacity
+                pageIndicator.layer.shadowOffset = pageIndicatorShadow.shadowOffset
+                pageIndicator.layer.shadowRadius = pageIndicatorShadow.shadowRadius
             }
         }
     }
