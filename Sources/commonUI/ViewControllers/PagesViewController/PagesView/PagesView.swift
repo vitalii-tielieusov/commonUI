@@ -38,12 +38,14 @@ public protocol PagesViewDataSource: AnyObject {
 public protocol PagesViewDelegate: AnyObject {
     func didScroll(to pageIndex: Int)
     func didScroll(contentOffset: CGPoint)
+    func didEndDecelerating(contentOffset: CGPoint)
     func didClickOnRightPageSide()
     func didClickOnLeftPageSide()
 }
 
 public extension PagesViewDelegate {
     func didScroll(contentOffset: CGPoint) { }
+    func didEndDecelerating(contentOffset: CGPoint) { }
 }
 
 public enum VerticalPagesAlignment {

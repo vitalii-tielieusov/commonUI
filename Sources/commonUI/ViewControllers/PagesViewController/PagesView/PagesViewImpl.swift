@@ -523,6 +523,7 @@ extension PagesViewImpl: UIScrollViewDelegate {
         if isScrollEnabled {
             scrollToMostVisiblePage()
             notifySelectedPageIndexDidChange()
+            delegate?.didEndDecelerating(contentOffset: scrollView.contentOffset)
         }
     }
     
