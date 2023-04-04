@@ -162,6 +162,10 @@ extension PagesViewControllerImpl: PagesViewDelegate {
         delegate?.didScroll(self, contentOffset: contentOffset)
     }
     
+    func didEndDecelerating(contentOffset: CGPoint) {
+        delegate?.didEndDecelerating(self, contentOffset: contentOffset)
+    }
+    
     public func didClickOnRightPageSide() {
         pagesView.selectNextPage(animated: true)
     }

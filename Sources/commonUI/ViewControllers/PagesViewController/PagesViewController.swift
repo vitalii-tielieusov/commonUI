@@ -28,11 +28,13 @@ public protocol PagesViewController: NSObjectProtocol {
 public protocol PagesViewControllerDelegate: NSObjectProtocol {
     func didSelect(_ pagesController: UIViewController, pageAtIndex: Int)
     func didScroll(_ pagesController: UIViewController, contentOffset: CGPoint)
+    func didEndDecelerating(_ pagesController: UIViewController, contentOffset: CGPoint)
 }
 
 public extension PagesViewControllerDelegate {
     func didSelect(_ pagesController: UIViewController, pageAtIndex: Int) { }
     func didScroll(_ pagesController: UIViewController, contentOffset: CGPoint) { }
+    func didEndDecelerating(_ pagesController: UIViewController, contentOffset: CGPoint) { }
 }
 
 public struct SizeRatio {
