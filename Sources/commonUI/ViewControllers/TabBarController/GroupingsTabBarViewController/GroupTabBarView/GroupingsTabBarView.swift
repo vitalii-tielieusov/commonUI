@@ -24,7 +24,7 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         let stackView = UIStackView()
         stackView.spacing = 0
         stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fillProportionally
         return stackView
     }()
     
