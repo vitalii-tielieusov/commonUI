@@ -187,6 +187,7 @@ extension TabBarGroupItemViewImpl {
         }
         
         subItemsStackView.addArrangedSubview(collapsedGroupSubItem)
+        collapsedGroupSubItem.delegate = self
     }
 
     private func setupAsSelected(
