@@ -92,7 +92,7 @@ public class GroupingsTabBarViewControllerImpl: UIViewController, GroupingsTabBa
         
         guard let vcs = viewControllers,
               let tbis = tabBarItems,
-              vcs.count == tbis.count,
+              vcs.count == tbis.flatMap({ $0.subItems }).count,
               !vcs.isEmpty else {
                   return nil
               }
