@@ -18,14 +18,13 @@ public protocol TabBar: AnyObject {
     
     init(tabBarItems: [TabBarItem])
     
-    func setupUI(tabBarTopOffset: CGFloat, tabBarItemWidth: CGFloat)
+    func setupUI(tabBarTopOffset: CGFloat)//TODO: May be should delete, tabBarTopOffset should path via init
 }
 
 public class TabBarViewImpl: UIView, TabBar {
     
     public weak var delegate: TabBarDelegate?
     private var tabBarItemViewModels: [TabBarItem]
-    private var tabBarItemViews = [TabBarItemView & UIView]()
     private var tabBarTopOffset: CGFloat = 0
     public var selectedTabBarItem: Int = 0 {
         willSet {
@@ -39,6 +38,7 @@ public class TabBarViewImpl: UIView, TabBar {
         let stackView = UIStackView()
         stackView.spacing = 0
         stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
         return stackView
     }()
     
@@ -48,14 +48,14 @@ public class TabBarViewImpl: UIView, TabBar {
         super.init(frame: .zero)
     }
     
-    public func setupUI(tabBarTopOffset: CGFloat, tabBarItemWidth: CGFloat) {
+    public func setupUI(tabBarTopOffset: CGFloat) {
         
         self.tabBarTopOffset = tabBarTopOffset
         
         setupViews()
         setupLayouts()
         
-        setupStackView(tabBarItemWidth: tabBarItemWidth)
+        setupStackView()
         selectPage(atIndex: selectedTabBarItem)
     }
     
@@ -80,7 +80,7 @@ extension TabBarViewImpl {
         }
     }
     
-    private func setupStackView(tabBarItemWidth: CGFloat) {
+    private func setupStackView() {
         
         for view in stackView.arrangedSubviews {
             view.removeFromSuperview()
@@ -95,10 +95,6 @@ extension TabBarViewImpl {
                 textColor: tabBarItem.textColor)
             tabBarItemView.isSelected = (index == selectedTabBarItem)
             tabBarItemView.delegate = self
-            
-            tabBarItemView.snp.makeConstraints { make in
-                make.width.equalTo(tabBarItemWidth)
-            }
             
             stackView.addArrangedSubview(tabBarItemView)
         }

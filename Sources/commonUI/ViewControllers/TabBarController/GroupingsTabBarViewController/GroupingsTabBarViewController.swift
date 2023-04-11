@@ -1,47 +1,47 @@
 //
-//  File.swift
+//  GroupingsTabBarViewController.swift
 //  
 //
-//  Created by Vitalii Tielieusov on 23.07.2022.
+//  Created by Vitalii Tielieusov on 10.04.2023.
 //
 
 import UIKit
 
-public protocol TabBarItemViewController: UIViewController {
+public protocol GroupingsTabBarItemViewController: UIViewController {
     var hidesTabBar: Bool { get }
 }
 
-public extension TabBarItemViewController {
+public extension GroupingsTabBarItemViewController {
     var hidesTabBar: Bool { return false }
 }
 
-public protocol TabBarViewControllerDelegate: NSObjectProtocol {
-    func tabBarController(tabBarController: TabBarViewController,
+public protocol GroupingsTabBarViewControllerDelegate: NSObjectProtocol {
+    func tabBarController(tabBarController: GroupingsTabBarViewController,
                           didSelect: UIViewController)
 }
 
-public extension TabBarViewControllerDelegate {
-    func tabBarController(tabBarController: TabBarViewController,
+public extension GroupingsTabBarViewControllerDelegate {
+    func tabBarController(tabBarController: GroupingsTabBarViewController,
                           didSelect: UIViewController) { }
 }
 
-public protocol TabBarViewController {
+public protocol GroupingsTabBarViewController {
     var rootView: UIView { get }
     var viewControllers: [UIViewController]? { get }
     var selectedViewController: UIViewController? { get }
     var selectedIndex: Int { get set }
     
-    init?(viewControllers: [TabBarItemViewController]?,
-          tabBarItems: [TabBarItem]?,
+    init?(viewControllers: [GroupingsTabBarItemViewController]?,
+          tabBarItems: [TabBarGroupItem]?,
           tabBarSize: CGSize,
           tabBarTopInset: CGFloat,
           tabBarBackgroundColor: UIColor?,
           hideNavigationBar: Bool)
     
-    var delegate: TabBarViewControllerDelegate? { get set }
+    var delegate: GroupingsTabBarViewControllerDelegate? { get set }
 }
 
-public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
+public class GroupingsTabBarViewControllerImpl: UIViewController, GroupingsTabBarViewController {
     
     private lazy var pagesView: PagesViewController = {
         let pView = PagesViewControllerImpl()
@@ -51,7 +51,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         return pView
     }()
     
-    private let tabBarView: TabBarViewImpl
+    private let tabBarView: GroupingsTabBarViewImpl
     private var _viewControllers: [UIViewController]
     private let hideNavigationBar: Bool
     private let tabBarSize: CGSize
@@ -79,11 +79,11 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         return self.view
     }
     
-    weak public var delegate: TabBarViewControllerDelegate?
+    weak public var delegate: GroupingsTabBarViewControllerDelegate?
     
     required public init?(
-        viewControllers: [TabBarItemViewController]?,
-        tabBarItems: [TabBarItem]?,
+        viewControllers: [GroupingsTabBarItemViewController]?,
+        tabBarItems: [TabBarGroupItem]?,
         tabBarSize: CGSize,
         tabBarTopInset: CGFloat = 0,
         tabBarBackgroundColor: UIColor?,
@@ -97,7 +97,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
                   return nil
               }
         
-        self.tabBarView = TabBarViewImpl(tabBarItems: tbis)
+        self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: tbis)
         self._viewControllers = vcs
         self.tabBarSize = tabBarSize
         self.tabBarViewTopInset = tabBarTopInset
@@ -167,7 +167,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
     }
 }
 
-extension TabBarViewControllerImpl: PagesViewControllerDelegate {
+extension GroupingsTabBarViewControllerImpl: PagesViewControllerDelegate {
     public func didSelect(pageAtIndex: Int) {
         guard tabBarView.selectedTabBarItem != pageAtIndex else { return }
         
@@ -177,7 +177,7 @@ extension TabBarViewControllerImpl: PagesViewControllerDelegate {
     }
 }
 
-extension TabBarViewControllerImpl: TabBarDelegate {
+extension GroupingsTabBarViewControllerImpl: TabBarDelegate {
     public func didClickTabBarItem(atIndex index: Int) {
         guard pagesView.selectedIndex != index else { return }
         
@@ -187,7 +187,7 @@ extension TabBarViewControllerImpl: TabBarDelegate {
     }
 }
 
-extension TabBarViewControllerImpl {
+extension GroupingsTabBarViewControllerImpl {
     private func informTabBarDelegateDidSelectViewController(atIndex index: Int) {
         guard let vcs = pagesView.viewControllers,
                 vcs.count > index else { return }
@@ -199,11 +199,11 @@ extension TabBarViewControllerImpl {
 }
 //------------------------------------------------
 
-extension TabBarViewControllerImpl: UINavigationControllerDelegate {
+extension GroupingsTabBarViewControllerImpl: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 
         guard pagesView.selectedViewController == navigationController,
-              let vc = viewController as? TabBarItemViewController
+              let vc = viewController as? GroupingsTabBarItemViewController
         else { return }
         
         hideTabBar(hide: vc.hidesTabBar)
@@ -212,7 +212,7 @@ extension TabBarViewControllerImpl: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         
         guard pagesView.selectedViewController == navigationController,
-              let vc = viewController as? TabBarItemViewController
+              let vc = viewController as? GroupingsTabBarItemViewController
         else { return }
         
         hideTabBar(hide: vc.hidesTabBar)
