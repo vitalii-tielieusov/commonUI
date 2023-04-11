@@ -239,9 +239,21 @@ extension TabBarGroupItemViewImpl: TabBarSubItemViewDelegate {
          Если кликнули по элементу уже раскрытой группы - сообщаем наружу что кликнули по вьюхе с таким-то id
          */
         if id == collapsedGroupSubItem.id {
-            if let selectedItemId = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id && $0.isSelected }).first?.id ??  allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id }).first?.id {
-                delegate?.didClickItem(withId: selectedItemId)
+//            if let selectedItemId = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id && $0.isSelected }).first?.id ??  allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id }).first?.id {
+//                delegate?.didClickItem(withId: selectedItemId)
+//            }
+            let selectedItemId: UUID? = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id && $0.isSelected }).first?.id
+            let firstItemId: UUID? = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id }).first?.id
+            let itemId: UUID? = selectedItemId ?? firstItemId
+            print("------- selectedItemId: \(selectedItemId)")
+            print("------- firstItemId: \(firstItemId)")
+            print("------- result ItemId: \(itemId)")
+            
+            if let id = itemId  {
+                delegate?.didClickItem(withId: id)
             }
+            
+                
         } else {
             delegate?.didClickItem(withId: id)
         }
