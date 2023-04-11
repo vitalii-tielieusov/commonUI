@@ -131,7 +131,7 @@ extension GroupingsTabBarViewImpl {
                 view.isSelected = (isGroupSelected: false, selectedTabBarItemIndex: nil)
             }
 
-            if i == tabBarSubItemsCount - 1 { groupSubItemsCount += tabBarSubItemsCount }
+            groupSubItemsCount += tabBarSubItemsCount
         }
     }
 }
