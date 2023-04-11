@@ -125,8 +125,7 @@ extension GroupingsTabBarViewImpl {
             
             if index >= groupSubItemsCount && index < groupSubItemsCount + tabBarSubItemsCount {
                 let tabBarItemIndexInGroup = index - groupSubItemsCount
-                let isGroupSelected = i == tabBarItemIndexInGroup
-                view.isSelected = (isGroupSelected: isGroupSelected, selectedTabBarItemIndex: i)
+                view.isSelected = (isGroupSelected: true, selectedTabBarItemIndex: tabBarItemIndexInGroup)
             } else {
                 view.isSelected = (isGroupSelected: false, selectedTabBarItemIndex: nil)
             }
