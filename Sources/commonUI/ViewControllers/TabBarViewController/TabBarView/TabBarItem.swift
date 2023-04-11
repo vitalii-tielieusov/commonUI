@@ -7,7 +7,10 @@
 
 import UIKit
 
-public struct TabBarItem {
+public protocol TabBarItemViewBase {
+}
+
+public struct TabBarItem: TabBarItemViewBase {
     public let title: String?
     public let textColor: UIColor?
     public let font: UIFont?

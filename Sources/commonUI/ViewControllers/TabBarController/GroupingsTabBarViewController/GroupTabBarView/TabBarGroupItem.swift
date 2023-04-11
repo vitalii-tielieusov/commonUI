@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct TabBarGroupItem {
+public struct TabBarGroupItem: TabBarItemViewBase {
     public let title: String?
     public let textColor: UIColor?
     public let font: UIFont?
