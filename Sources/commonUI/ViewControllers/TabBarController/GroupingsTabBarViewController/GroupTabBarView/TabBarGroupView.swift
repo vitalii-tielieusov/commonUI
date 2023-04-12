@@ -44,7 +44,7 @@ public protocol TabBarGroupItemView: AnyObject {
 public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     
     public var tabBarItemViews: [TabBarSubItemView] {
-        allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id })
+        expandedGroupSubItems
     }
 
     public var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?) = (isGroupSelected: false, selectedTabBarItemIndex: nil) {
@@ -59,7 +59,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     private let font: UIFont?
     private let textColor: UIColor?
     private var textBackgroundImage: UIImage?
-    private let subItems: [TabBarSubItem]
+    private let expandedGroupSubItems: [TabBarSubItemViewImpl]
     private let collapsedGroupSubItem: TabBarSubItemViewImpl
     
     public weak var delegate: TabBarGroupItemViewDelegate?
@@ -125,7 +125,16 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
             selectedTabBarItemImage: collapsedGroupImage
         )
         
-        self.subItems = subItems
+        var tabBarItemViews = [TabBarSubItemViewImpl]()
+        for tabBarItem in subItems {
+            let tabBarItemView = TabBarSubItemViewImpl(
+                tabBarItemImage: tabBarItem.image,
+                selectedTabBarItemImage: tabBarItem.selectedImage
+            )
+            tabBarItemView.isSelected = false
+            tabBarItemViews.append(tabBarItemView)
+        }
+        expandedGroupSubItems = tabBarItemViews
 
         super.init(frame: .zero)
 
@@ -174,12 +183,7 @@ extension TabBarGroupItemViewImpl {
     }
     
     private func setupTabBarSubItemsStackView() {
-        
-        for tabBarItem in subItems {
-            let tabBarItemView = TabBarSubItemViewImpl(
-                tabBarItemImage: tabBarItem.image,
-                selectedTabBarItemImage: tabBarItem.selectedImage
-            )
+        for tabBarItemView in expandedGroupSubItems {
             tabBarItemView.isSelected = false
             tabBarItemView.delegate = self
 
@@ -207,26 +211,15 @@ extension TabBarGroupItemViewImpl {
         }
     }
     
-    private func allTabBarSubItems() -> [TabBarSubItemView & UIView] {
-        guard let subviews = subItemsStackView.arrangedSubviews as? [TabBarSubItemView & UIView] else {
-            return []
-        }
-        
-        return subviews
-    }
-    
     private func expandGroup(_ expande: Bool) {
-        allTabBarSubItems().forEach { tabBarSubItemView in
-            if expande {
-                tabBarSubItemView.isHidden = tabBarSubItemView.id == collapsedGroupSubItem.id
-            } else {
-                tabBarSubItemView.isHidden = tabBarSubItemView.id != collapsedGroupSubItem.id
-            }
+        expandedGroupSubItems.forEach { view in
+            view.isHidden = !expande
         }
+        collapsedGroupSubItem.isHidden = expande
     }
     
     func selectTabBarItem(atIndex index: Int) {
-        for (i, view) in allTabBarSubItems().enumerated() {
+        for (i, view) in expandedGroupSubItems.enumerated() {
             view.isSelected = (i == index)
         }
     }
@@ -239,11 +232,8 @@ extension TabBarGroupItemViewImpl: TabBarSubItemViewDelegate {
          Если кликнули по элементу уже раскрытой группы - сообщаем наружу что кликнули по вьюхе с таким-то id
          */
         if id == collapsedGroupSubItem.id {
-//            if let selectedItemId = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id && $0.isSelected }).first?.id ??  allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id }).first?.id {
-//                delegate?.didClickItem(withId: selectedItemId)
-//            }
-            let selectedItemId: UUID? = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id && $0.isSelected }).first?.id
-            let firstItemId: UUID? = allTabBarSubItems().filter({ $0.id != collapsedGroupSubItem.id }).first?.id
+            let selectedItemId: UUID? = expandedGroupSubItems.filter({ $0.isSelected }).first?.id
+            let firstItemId: UUID? = expandedGroupSubItems.first?.id
             let itemId: UUID? = selectedItemId ?? firstItemId
             print("------- selectedItemId: \(selectedItemId)")
             print("------- firstItemId: \(firstItemId)")
