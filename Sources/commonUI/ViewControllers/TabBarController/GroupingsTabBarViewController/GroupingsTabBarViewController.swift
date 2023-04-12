@@ -169,7 +169,7 @@ public class GroupingsTabBarViewControllerImpl: UIViewController, GroupingsTabBa
     
     private static func updateTabBarGroupItems(
         _ tabBarItems: [TabBarGroupItem],
-        forTabBarSize: CGSize
+        forTabBarSize tabBarSize: CGSize
     ) -> [TabBarGroupItem] {
         let maxVisibleTabBarSubItemsCount: Int = {
             var maxSubItemsCount: Int = 0
