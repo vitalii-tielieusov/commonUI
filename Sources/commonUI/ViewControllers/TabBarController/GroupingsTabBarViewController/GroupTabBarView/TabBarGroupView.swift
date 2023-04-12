@@ -171,8 +171,8 @@ extension TabBarGroupItemViewImpl {
             view.removeFromSuperview()
         }
         
-        contentStackView.addArrangedSubview(titleView)
         contentStackView.addArrangedSubview(subItemsStackView)
+//        contentStackView.addArrangedSubview(titleView)
         
         label.text = title
         label.font = font
