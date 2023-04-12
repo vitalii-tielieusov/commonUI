@@ -61,6 +61,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     private var textBackgroundImage: UIImage?
     private let expandedGroupSubItems: [TabBarSubItemViewImpl]
     private let collapsedGroupSubItem: TabBarSubItemViewImpl
+    private var tabBarSubItemWidth: CGFloat?
     
     public weak var delegate: TabBarGroupItemViewDelegate?
     
@@ -135,11 +136,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
             tabBarItemView.isSelected = false
             tabBarItemViews.append(tabBarItemView)
             
-            if let width = tabBarItem.width {
-                tabBarItemView.snp.makeConstraints { make in
-                    make.width.equalTo(width)
-                }
-            }
+            self.tabBarSubItemWidth = tabBarItem.width
         }
         expandedGroupSubItems = tabBarItemViews
 
@@ -191,7 +188,6 @@ extension TabBarGroupItemViewImpl {
     
     private func setupTabBarSubItemsStackView() {
         for tabBarItemView in expandedGroupSubItems {
-//            tabBarItemView.isSelected = false
             tabBarItemView.delegate = self
 
             subItemsStackView.addArrangedSubview(tabBarItemView)
@@ -223,6 +219,14 @@ extension TabBarGroupItemViewImpl {
             view.isHidden = !expande
         }
         collapsedGroupSubItem.isHidden = expande
+        
+        contentStackView.snp.remakeConstraints { make in
+            make.edges.equalToSuperview()
+            if let subItemWidth = tabBarSubItemWidth {
+                let groupItemWidth = expande ? CGFloat(expandedGroupSubItems.count) * subItemWidth : subItemWidth
+                make.width.equalTo(groupItemWidth)
+            }
+        }
     }
     
     func selectTabBarItem(atIndex index: Int) {

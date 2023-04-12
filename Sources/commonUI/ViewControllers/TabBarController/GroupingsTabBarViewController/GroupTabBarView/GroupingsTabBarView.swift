@@ -120,7 +120,7 @@ extension GroupingsTabBarViewImpl {
     
     func selectTabBarItem(atIndex index: Int) {
         var groupSubItemsCount: Int = 0
-        for (i, view) in groupTabBarItemViews().enumerated() {
+        for view in groupTabBarItemViews() {
             let tabBarSubItemsCount = view.tabBarItemViews.count
             
             if index >= groupSubItemsCount && index < groupSubItemsCount + tabBarSubItemsCount {
