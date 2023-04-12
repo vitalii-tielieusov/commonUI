@@ -74,7 +74,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.spacing = 0
+        stackView.spacing = -10
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         return stackView
