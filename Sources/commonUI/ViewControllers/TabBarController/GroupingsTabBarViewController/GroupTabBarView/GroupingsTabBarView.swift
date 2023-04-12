@@ -12,6 +12,7 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
     public weak var delegate: TabBarDelegate?
     private var tabBarItemViewModels: [TabBarGroupItem]
     private var tabBarTopOffset: CGFloat = 0
+    private var tabBarWidth: CGFloat = 0//TODO: Should have no default value
     public var selectedTabBarItem: Int = 0 {
         willSet {
             guard newValue != selectedTabBarItem else { return }
@@ -28,8 +29,9 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         return stackView
     }()
     
-    required public init(tabBarItems: [TabBarGroupItem]) {
+    required public init(tabBarItems: [TabBarGroupItem], tabBarWidth: CGFloat) {
         self.tabBarItemViewModels = tabBarItems
+        self.tabBarWidth = tabBarWidth
         
         super.init(frame: .zero)
     }
@@ -94,8 +96,8 @@ extension GroupingsTabBarViewImpl {
 }
 
 extension GroupingsTabBarViewImpl {
-    private func groupTabBarItemViews() -> [TabBarGroupItemView] {
-        guard let views = stackView.arrangedSubviews as? [TabBarGroupItemView] else {
+    private func groupTabBarItemViews() -> [TabBarGroupItemView & UIView] {
+        guard let views = stackView.arrangedSubviews as? [TabBarGroupItemView & UIView] else {
             return []
         }
         
@@ -131,6 +133,25 @@ extension GroupingsTabBarViewImpl {
             }
 
             groupSubItemsCount += tabBarSubItemsCount
+        }
+        remakeConstraintsForTabBarItems()
+    }
+    
+    private func remakeConstraintsForTabBarItems() {
+        let visibleTabBarItemsCount: Int = {
+            var count = 0
+            for view in groupTabBarItemViews() {
+                count += view.isSelected.isGroupSelected ? view.tabBarItemViews.count : 1
+            }
+            return count
+        }()
+        let visibleTabBarItemWidth: CGFloat = tabBarWidth / CGFloat(visibleTabBarItemsCount)
+        
+        for view in groupTabBarItemViews() {
+            let groupTabBarItemViewWidth = view.isSelected.isGroupSelected ? visibleTabBarItemWidth * CGFloat(view.tabBarItemViews.count) : visibleTabBarItemWidth
+            view.snp.remakeConstraints { make in
+                make.width.equalTo(groupTabBarItemViewWidth)
+            }
         }
     }
 }

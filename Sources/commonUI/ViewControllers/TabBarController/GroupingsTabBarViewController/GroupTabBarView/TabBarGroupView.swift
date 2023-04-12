@@ -220,13 +220,14 @@ extension TabBarGroupItemViewImpl {
         }
         collapsedGroupSubItem.isHidden = expande
         
+        /*
         contentStackView.snp.remakeConstraints { make in
             make.edges.equalToSuperview()
             if let subItemWidth = tabBarSubItemWidth {
                 let groupItemWidth = expande ? CGFloat(expandedGroupSubItems.count) * subItemWidth : subItemWidth
                 make.width.equalTo(groupItemWidth)
             }
-        }
+        }*/
     }
     
     func selectTabBarItem(atIndex index: Int) {
@@ -246,10 +247,7 @@ extension TabBarGroupItemViewImpl: TabBarSubItemViewDelegate {
             let selectedItemId: UUID? = expandedGroupSubItems.filter({ $0.isSelected }).first?.id
             let firstItemId: UUID? = expandedGroupSubItems.first?.id
             let itemId: UUID? = selectedItemId ?? firstItemId
-            print("------- selectedItemId: \(selectedItemId)")
-            print("------- firstItemId: \(firstItemId)")
-            print("------- result ItemId: \(itemId)")
-            
+
             if let id = itemId  {
                 delegate?.didClickItem(withId: id)
             }
