@@ -76,6 +76,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         let stackView = UIStackView()
         stackView.spacing = 0
         stackView.axis = .vertical
+        stackView.distribution = .fillEqually
         return stackView
     }()
 
