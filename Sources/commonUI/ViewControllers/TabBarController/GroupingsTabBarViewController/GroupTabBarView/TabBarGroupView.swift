@@ -184,7 +184,7 @@ extension TabBarGroupItemViewImpl {
     
     private func setupTabBarSubItemsStackView() {
         for tabBarItemView in expandedGroupSubItems {
-            tabBarItemView.isSelected = false
+//            tabBarItemView.isSelected = false
             tabBarItemView.delegate = self
 
             subItemsStackView.addArrangedSubview(tabBarItemView)
