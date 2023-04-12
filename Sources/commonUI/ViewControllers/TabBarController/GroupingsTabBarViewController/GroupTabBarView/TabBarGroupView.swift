@@ -91,7 +91,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     }()
 
     private lazy var titleView: UIView = {
-        let view = UIView()
+        let view = PassthroughView()
         view.addSubview(imageView)
         view.addSubview(label)
         
@@ -105,7 +105,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
             make.centerX.equalToSuperview()
         }
         
-        return imageView
+        return view
     }()
     
     required public init(
@@ -173,7 +173,6 @@ extension TabBarGroupItemViewImpl {
         
         contentStackView.addArrangedSubview(subItemsStackView)
         contentStackView.addArrangedSubview(titleView)
-        titleView.isUserInteractionEnabled = false
         
         label.text = title
         label.font = font
