@@ -35,12 +35,15 @@ public struct TabBarGroupItem: TabBarItemViewBase {
 public struct TabBarSubItem {
     public var image: UIImage?
     public var selectedImage: UIImage?
+    public var width: CGFloat?
     
     public init(
         tabBarItemImage: UIImage?,
-        selectedTabBarItemImage: UIImage?
+        selectedTabBarItemImage: UIImage?,
+        width: CGFloat? = nil
     ) {
         self.image = tabBarItemImage
         self.selectedImage = selectedTabBarItemImage
+        self.width = width
     }
 }

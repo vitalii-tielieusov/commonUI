@@ -134,6 +134,12 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
             )
             tabBarItemView.isSelected = false
             tabBarItemViews.append(tabBarItemView)
+            
+            if let width = tabBarItem.width {
+                tabBarItemView.snp.makeConstraints { make in
+                    make.width.equalTo(width)
+                }
+            }
         }
         expandedGroupSubItems = tabBarItemViews
 
