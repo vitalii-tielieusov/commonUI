@@ -173,6 +173,7 @@ extension TabBarGroupItemViewImpl {
         
         contentStackView.addArrangedSubview(subItemsStackView)
         contentStackView.addArrangedSubview(titleView)
+        titleView.isUserInteractionEnabled = false
         
         label.text = title
         label.font = font
