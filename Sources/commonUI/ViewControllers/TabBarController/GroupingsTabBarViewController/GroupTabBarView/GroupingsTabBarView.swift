@@ -149,6 +149,7 @@ extension GroupingsTabBarViewImpl {
         
         for view in groupTabBarItemViews() {
             let groupTabBarItemViewWidth = view.isSelected.isGroupSelected ? visibleTabBarItemWidth * CGFloat(view.tabBarItemViews.count) : visibleTabBarItemWidth
+            print(" --------- groupTabBarItemViewWidth: \(groupTabBarItemViewWidth)")
             view.snp.remakeConstraints { make in
                 make.width.equalTo(groupTabBarItemViewWidth)
             }
