@@ -90,7 +90,7 @@ extension TabBarSubItemViewImpl {
         }
     }
     
-    private func setupAsSelected(_ isSelected: Bool, animate: Bool = true) {
+    private func setupAsSelected(_ isSelected: Bool, animate: Bool = false) {
         let toImage = isSelected ? selectedTabBarItemImage : tabBarItemImage
 
         if animate {

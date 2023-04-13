@@ -201,13 +201,13 @@ extension TabBarGroupItemViewImpl {
         
         if isGroupSelected {
             hideView(titleView, hide: false, animate: animate)
-            expandGroup(true)
+            expandGroup(true, animate: animate)
             if let index = selectedTabBarItemIndex {
                 selectTabBarItem(atIndex: index)
             }
         } else {
             hideView(titleView, hide: true, animate: animate)
-            expandGroup(false)
+            expandGroup(false, animate: animate)
         }
     }
 
