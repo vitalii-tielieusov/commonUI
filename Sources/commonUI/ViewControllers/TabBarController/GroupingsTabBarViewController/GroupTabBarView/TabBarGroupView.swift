@@ -197,7 +197,7 @@ extension TabBarGroupItemViewImpl {
     private func setupAsSelected(
         isGroupSelected: Bool,
         selectedTabBarItemIndex: Int?,
-        animate: Bool = true) {
+        animate: Bool = false) {
         
         if isGroupSelected {
             hideView(titleView, hide: false, animate: animate)
