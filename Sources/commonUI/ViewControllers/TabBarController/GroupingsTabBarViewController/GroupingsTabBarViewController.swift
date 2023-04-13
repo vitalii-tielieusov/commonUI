@@ -97,9 +97,6 @@ public class GroupingsTabBarViewControllerImpl: UIViewController, GroupingsTabBa
                   return nil
               }
         
-//        self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: GroupingsTabBarViewControllerImpl.updateTabBarGroupItems(tbis, forTabBarSize: tabBarSize)
-//        )
-        
         self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: tbis, tabBarWidth: tabBarSize.width)
         self._viewControllers = vcs
         self.tabBarSize = tabBarSize
@@ -167,43 +164,6 @@ public class GroupingsTabBarViewControllerImpl: UIViewController, GroupingsTabBa
     func setupTabBar() {
         tabBarView.delegate = self
         tabBarView.setupUI(tabBarTopOffset: tabBarViewTopInset)
-    }
-    
-    private static func updateTabBarGroupItems(
-        _ tabBarItems: [TabBarGroupItem],
-        forTabBarSize tabBarSize: CGSize
-    ) -> [TabBarGroupItem] {
-        let maxVisibleTabBarSubItemsCount: Int = {
-            var maxSubItemsCount: Int = 0
-            for item in tabBarItems {
-                maxSubItemsCount = item.subItems.count > maxSubItemsCount ? item.subItems.count : maxSubItemsCount
-            }
-            return tabBarItems.count + maxSubItemsCount - 1
-        }()
-        
-        let updatedTabBarItems: [TabBarGroupItem] = {
-            var result = [TabBarGroupItem]()
-            for item in tabBarItems {
-                let subItems = item.subItems.map({
-                    TabBarSubItem(
-                        tabBarItemImage: $0.image,
-                        selectedTabBarItemImage: $0.selectedImage,
-                        width: tabBarSize.width / CGFloat(maxVisibleTabBarSubItemsCount)
-                    )
-                })
-                let updatedItem = TabBarGroupItem(
-                    title: item.title,
-                    textColor: item.textColor,
-                    font: item.font,
-                    textBackgroundImage: item.textBackgroundImage,
-                    collapsedGroupImage: item.collapsedGroupImage,
-                    subItems: subItems)
-                result.append(updatedItem)
-            }
-            return result
-        }()
-        
-        return updatedTabBarItems
     }
 }
 

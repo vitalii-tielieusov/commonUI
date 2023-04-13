@@ -61,7 +61,6 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     private var textBackgroundImage: UIImage?
     private let expandedGroupSubItems: [TabBarSubItemViewImpl]
     private let collapsedGroupSubItem: TabBarSubItemViewImpl
-    private var tabBarSubItemWidth: CGFloat?
     
     public weak var delegate: TabBarGroupItemViewDelegate?
     
@@ -135,8 +134,6 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
             )
             tabBarItemView.isSelected = false
             tabBarItemViews.append(tabBarItemView)
-            
-            self.tabBarSubItemWidth = tabBarItem.width
         }
         expandedGroupSubItems = tabBarItemViews
 
@@ -203,31 +200,34 @@ extension TabBarGroupItemViewImpl {
         animate: Bool = true) {
         
         if isGroupSelected {
-            titleView.isHidden = false
+            hideView(titleView, hide: false, animate: animate)
             expandGroup(true)
             if let index = selectedTabBarItemIndex {
                 selectTabBarItem(atIndex: index)
             }
         } else {
-            titleView.isHidden = true
+            hideView(titleView, hide: true, animate: animate)
             expandGroup(false)
         }
     }
-    
-    private func expandGroup(_ expande: Bool) {
+
+    private func expandGroup(_ expande: Bool, animate: Bool = true) {
         expandedGroupSubItems.forEach { view in
-            view.isHidden = !expande
+            hideView(view, hide: !expande, animate: animate)
         }
-        collapsedGroupSubItem.isHidden = expande
-        
-        /*
-        contentStackView.snp.remakeConstraints { make in
-            make.edges.equalToSuperview()
-            if let subItemWidth = tabBarSubItemWidth {
-                let groupItemWidth = expande ? CGFloat(expandedGroupSubItems.count) * subItemWidth : subItemWidth
-                make.width.equalTo(groupItemWidth)
-            }
-        }*/
+        hideView(collapsedGroupSubItem, hide: expande, animate: animate)
+    }
+    
+    private func hideView(_ view: UIView, hide: Bool, animate: Bool = true) {
+        if animate {
+            UIView.transition(with: view, duration: 0.4,
+                              options: .transitionCrossDissolve,
+                              animations: {
+                             view.isHidden = hide
+                          })
+        } else {
+            view.isHidden = hide
+        }
     }
     
     func selectTabBarItem(atIndex index: Int) {
@@ -251,8 +251,6 @@ extension TabBarGroupItemViewImpl: TabBarSubItemViewDelegate {
             if let id = itemId  {
                 delegate?.didClickItem(withId: id)
             }
-            
-                
         } else {
             delegate?.didClickItem(withId: id)
         }
