@@ -100,7 +100,7 @@ public class GroupingsTabBarViewControllerImpl: UIViewController, GroupingsTabBa
 //        self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: GroupingsTabBarViewControllerImpl.updateTabBarGroupItems(tbis, forTabBarSize: tabBarSize)
 //        )
         
-        self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: tbis, tabBarWidth: 0)
+        self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: tbis, tabBarWidth: tabBarSize.width)
         self._viewControllers = vcs
         self.tabBarSize = tabBarSize
         self.tabBarViewTopInset = tabBarTopInset
