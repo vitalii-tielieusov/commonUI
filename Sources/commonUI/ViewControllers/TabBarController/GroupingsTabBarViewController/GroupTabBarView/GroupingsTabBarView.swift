@@ -137,7 +137,7 @@ extension GroupingsTabBarViewImpl {
         remakeConstraintsForTabBarItems()
     }
     
-    private func remakeConstraintsForTabBarItems() {
+    private func remakeConstraintsForTabBarItems(animate: Bool = true) {
         let visibleTabBarItemsCount: Int = {
             var count = 0
             for view in groupTabBarItemViews() {
@@ -149,9 +149,15 @@ extension GroupingsTabBarViewImpl {
         
         for view in groupTabBarItemViews() {
             let groupTabBarItemViewWidth = view.isSelected.isGroupSelected ? visibleTabBarItemWidth * CGFloat(view.tabBarItemViews.count) : visibleTabBarItemWidth
-            print(" --------- groupTabBarItemViewWidth: \(groupTabBarItemViewWidth)")
+            
             view.snp.remakeConstraints { make in
-                make.width.equalTo(groupTabBarItemViewWidth)
+                if animate {
+                    UIView.animate(withDuration: 0.3, animations: {
+                        make.width.equalTo(groupTabBarItemViewWidth)
+                    })
+                } else {
+                    make.width.equalTo(groupTabBarItemViewWidth)
+                }
             }
         }
     }

@@ -219,8 +219,10 @@ extension TabBarGroupItemViewImpl {
     }
     
     private func hideView(_ view: UIView, hide: Bool, animate: Bool = true) {
+        guard view.isHidden != hide else { return }
+        
         if animate {
-            UIView.transition(with: view, duration: 0.4,
+            UIView.transition(with: view, duration: 0.3,
                               options: .transitionCrossDissolve,
                               animations: {
                              view.isHidden = hide
