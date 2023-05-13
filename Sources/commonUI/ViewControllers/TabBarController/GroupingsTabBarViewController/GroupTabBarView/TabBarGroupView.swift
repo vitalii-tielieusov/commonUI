@@ -185,82 +185,15 @@ extension TabBarGroupItemViewImpl {
         duration: TimeInterval = 0.3,
         atFirst: Bool = false
     ) {
-//        remakeConstraintsForTitleView(hide: !isGroupSelected, animate: true, duration: duration, atFirst: atFirst)
         if isGroupSelected {
-            hideViewTitleView(hide: false, animate: animate, duration: duration)
-//            hideView(titleView, hide: false, animate: animate, duration: duration)
+            hideTitleView(hide: false, animate: animate, duration: duration)
             expandGroup(true, animate: animate, duration: duration)
             if let index = selectedTabBarItemIndex {
                 selectTabBarItem(atIndex: index)
             }
         } else {
-            hideViewTitleView(hide: true, animate: animate, duration: duration)
-//            hideView(titleView, hide: true, animate: animate, duration: duration)
+            hideTitleView(hide: true, animate: animate, duration: duration)
             expandGroup(false, animate: animate, duration: duration)
-        }
-    }
-    
-    private func remakeConstraintsForTitleView(
-        hide: Bool,
-        animate: Bool = true,
-        duration: TimeInterval = 0.3,
-        atFirst: Bool = false
-    ) {
-        let offste: CGFloat = hide ? 15 : 10
-        if animate {
-            UIView.transition(with: label, duration: duration,
-                              options: .transitionCrossDissolve,
-                              animations: { [weak self] in
-                if atFirst {
-                    self?.label.snp.makeConstraints { make in
-                        make.top.equalToSuperview().offset(offste)
-                        make.centerX.equalToSuperview()
-                    }
-                } else {
-                    self?.label.snp.updateConstraints { make in
-                        make.top.equalToSuperview().offset(offste)
-                    }
-                }
-
-//                self?.label.superview?.layoutIfNeeded()
-            })
-//            UIView.transition(with: titleView, duration: duration,
-//                              options: .transitionCrossDissolve,
-//                              animations: { [weak self] in
-//                if atFirst {
-//                    self?.titleView.snp.makeConstraints { make in
-//                        make.top.equalToSuperview().offset(offste)
-//                        make.centerX.equalToSuperview()
-//                    }
-//                } else {
-//                    self?.titleView.snp.updateConstraints { make in
-//                        make.top.equalToSuperview().offset(offste)
-//                    }
-//                }
-//
-////                self?.titleView.superview?.layoutIfNeeded()
-//            })
-        } else {
-            if atFirst {
-                label.snp.makeConstraints { make in
-                    make.top.equalToSuperview().offset(offste)
-                    make.centerX.equalToSuperview()
-                }
-            } else {
-                label.snp.updateConstraints { make in
-                    make.top.equalToSuperview().offset(offste)
-                }
-            }
-//            if atFirst {
-//                titleView.snp.makeConstraints { make in
-//                    make.top.equalToSuperview().offset(offste)
-//                    make.centerX.equalToSuperview()
-//                }
-//            } else {
-//                titleView.snp.updateConstraints { make in
-//                    make.top.equalToSuperview().offset(offste)
-//                }
-//            }
         }
     }
 
@@ -279,22 +212,23 @@ extension TabBarGroupItemViewImpl {
         guard view.isHidden != hide else { return }
         
         if animate {
-            UIView.animate(withDuration: duration) {
+            UIView.animate(withDuration: duration, animations: {
                 view.isHidden = hide
+                view.alpha = hide ? 0 : 1
+
                 view.superview?.layoutIfNeeded()
+                
+            }) { (finished) in
+                
+                view.isHidden = hide
             }
-//            UIView.transition(with: view, duration: duration,
-//                              options: .transitionCrossDissolve,
-//                              animations: {
-//                             view.isHidden = hide
-//                          })
         } else {
             view.isHidden = hide
         }
     }
     
-    private func hideViewTitleView(hide: Bool, animate: Bool = true, duration: TimeInterval = 0.3) {
-        let textColor = hide ? UIColor.black : textColor
+    private func hideTitleView(hide: Bool, animate: Bool = true, duration: TimeInterval = 0.3) {
+        let textColor = hide ? UIColor.clear : textColor
         
         if animate {
             UIView.transition(with: label, duration: duration, options: .transitionCrossDissolve) { [weak self] in

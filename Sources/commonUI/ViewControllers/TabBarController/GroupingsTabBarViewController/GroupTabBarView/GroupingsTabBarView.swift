@@ -17,8 +17,7 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         willSet {
             guard newValue != selectedTabBarItem else { return }
             
-//            selectTabBarItem(atIndex: newValue)
-            selectTabBarItem(atIndex: newValue, animate: true, duration: 2.0)
+            selectTabBarItem(atIndex: newValue)
         }
     }
     
@@ -32,7 +31,6 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
     
     private lazy var higlightImageView: UIImageView = {
         let imageView = UIImageView()
-//        imageView.backgroundColor = .blue
         return imageView
     }()
 
@@ -95,8 +93,6 @@ extension GroupingsTabBarViewImpl {
         
         higlightView.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-//            make.centerX.equalToSuperview()
-//            make.centerX.equalTo(self.frame.origin.x + 0.5 * self.frame.size.width)
         }
     }
     
@@ -105,8 +101,7 @@ extension GroupingsTabBarViewImpl {
         for view in stackView.arrangedSubviews {
             view.removeFromSuperview()
         }
-        
-//        var color1 = true
+
         for tabBarItem in tabBarItemViewModels {
             let tabBarItemView = TabBarGroupItemViewImpl(
                 title: tabBarItem.title,
@@ -115,8 +110,6 @@ extension GroupingsTabBarViewImpl {
                 collapsedGroupImage: tabBarItem.collapsedGroupImage,
                 subItems: tabBarItem.subItems)
             tabBarItemView.delegate = self
-//            tabBarItemView.backgroundColor = color1 ? .red : .green
-//            color1.toggle()
             
             stackView.addArrangedSubview(tabBarItemView)
             
@@ -183,7 +176,7 @@ extension GroupingsTabBarViewImpl {
             let groupTabBarItemViewWidth = view.isSelected.isGroupSelected ? visibleTabBarItemWidth * CGFloat(view.tabBarItemViews.count) : visibleTabBarItemWidth
 
             if animate {
-                UIView.animate(withDuration: duration, animations: { [weak self] in
+                UIView.animate(withDuration: duration, animations: {
                     if atFirst {
                         view.snp.makeConstraints { make in
                             make.width.equalTo(groupTabBarItemViewWidth)
