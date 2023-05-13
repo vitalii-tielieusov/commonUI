@@ -17,7 +17,8 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         willSet {
             guard newValue != selectedTabBarItem else { return }
             
-            selectTabBarItem(atIndex: newValue)
+//            selectTabBarItem(atIndex: newValue)
+            selectTabBarItem(atIndex: newValue, animate: true, duration: 2.0)
         }
     }
     
@@ -27,6 +28,24 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         stackView.axis = .horizontal
         stackView.distribution = .fillProportionally
         return stackView
+    }()
+    
+    private lazy var higlightImageView: UIImageView = {
+        let imageView = UIImageView()
+//        imageView.backgroundColor = .blue
+        return imageView
+    }()
+
+    private lazy var higlightView: UIView = {
+        let view = PassthroughView()
+        view.addSubview(higlightImageView)
+        
+        higlightImageView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+            make.centerX.equalToSuperview()
+        }
+        
+        return view
     }()
     
     required public init(tabBarItems: [TabBarGroupItem], tabBarWidth: CGFloat) {
@@ -50,7 +69,7 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         setupLayouts()
         
         setupStackView()
-        selectTabBarItem(atIndex: selectedTabBarItem)
+        selectTabBarItem(atIndex: selectedTabBarItem, animate: false, atFirst: true)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -65,12 +84,19 @@ extension GroupingsTabBarViewImpl {
     
     private func setupViews() {
         addSubview(stackView)
+        addSubview(higlightView)
     }
     
     private func setupLayouts() {
         stackView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(tabBarTopOffset)
             make.left.right.bottom.equalToSuperview()
+        }
+        
+        higlightView.snp.makeConstraints { make in
+            make.bottom.equalToSuperview()
+//            make.centerX.equalToSuperview()
+//            make.centerX.equalTo(self.frame.origin.x + 0.5 * self.frame.size.width)
         }
     }
     
@@ -80,17 +106,23 @@ extension GroupingsTabBarViewImpl {
             view.removeFromSuperview()
         }
         
+//        var color1 = true
         for tabBarItem in tabBarItemViewModels {
             let tabBarItemView = TabBarGroupItemViewImpl(
                 title: tabBarItem.title,
                 font: tabBarItem.font,
                 textColor: tabBarItem.textColor,
-                textBackgroundImage: tabBarItem.textBackgroundImage,
                 collapsedGroupImage: tabBarItem.collapsedGroupImage,
                 subItems: tabBarItem.subItems)
             tabBarItemView.delegate = self
+//            tabBarItemView.backgroundColor = color1 ? .red : .green
+//            color1.toggle()
             
             stackView.addArrangedSubview(tabBarItemView)
+            
+            if higlightImageView.image == nil {
+                higlightImageView.image = tabBarItem.textBackgroundImage
+            }
         }
     }
 }
@@ -120,24 +152,24 @@ extension GroupingsTabBarViewImpl {
         return groupsTabBarSubItemViews()[index]
     }
     
-    func selectTabBarItem(atIndex index: Int) {
+    func selectTabBarItem(atIndex index: Int, animate: Bool = true, duration: TimeInterval = 0.3, atFirst: Bool = false) {
         var groupSubItemsCount: Int = 0
         for view in groupTabBarItemViews() {
             let tabBarSubItemsCount = view.tabBarItemViews.count
             
             if index >= groupSubItemsCount && index < groupSubItemsCount + tabBarSubItemsCount {
                 let tabBarItemIndexInGroup = index - groupSubItemsCount
-                view.isSelected = (isGroupSelected: true, selectedTabBarItemIndex: tabBarItemIndexInGroup)
+                view.isSelected = (isGroupSelected: true, selectedTabBarItemIndex: tabBarItemIndexInGroup, animate: animate, duration: duration)
             } else {
-                view.isSelected = (isGroupSelected: false, selectedTabBarItemIndex: nil)
+                view.isSelected = (isGroupSelected: false, selectedTabBarItemIndex: nil, animate: animate, duration: duration)
             }
 
             groupSubItemsCount += tabBarSubItemsCount
         }
-        remakeConstraintsForTabBarItems()
+        remakeConstraintsForTabBarItems(animate: animate, duration: duration, atFirst: atFirst)
     }
     
-    private func remakeConstraintsForTabBarItems(animate: Bool = true) {
+    private func remakeConstraintsForTabBarItems(animate: Bool = true, duration: TimeInterval = 0.3, atFirst: Bool = false) {
         let visibleTabBarItemsCount: Int = {
             var count = 0
             for view in groupTabBarItemViews() {
@@ -147,16 +179,62 @@ extension GroupingsTabBarViewImpl {
         }()
         let visibleTabBarItemWidth: CGFloat = tabBarWidth / CGFloat(visibleTabBarItemsCount)
         
-        for view in groupTabBarItemViews() {
+        for (index, view) in groupTabBarItemViews().enumerated() {
             let groupTabBarItemViewWidth = view.isSelected.isGroupSelected ? visibleTabBarItemWidth * CGFloat(view.tabBarItemViews.count) : visibleTabBarItemWidth
-            
-            view.snp.remakeConstraints { make in
-                if animate {
-                    UIView.animate(withDuration: 0.3, animations: {
+
+            if animate {
+                UIView.animate(withDuration: duration, animations: { [weak self] in
+                    if atFirst {
+                        view.snp.makeConstraints { make in
+                            make.width.equalTo(groupTabBarItemViewWidth)
+                        }
+                    } else {
+                        view.snp.updateConstraints { make in
+                            make.width.equalTo(groupTabBarItemViewWidth)
+                        }
+                    }
+                    
+                    view.superview?.layoutIfNeeded()
+                })
+            } else {
+                if atFirst {
+                    view.snp.makeConstraints { make in
                         make.width.equalTo(groupTabBarItemViewWidth)
-                    })
+                    }
                 } else {
-                    make.width.equalTo(groupTabBarItemViewWidth)
+                    view.snp.updateConstraints { make in
+                        make.width.equalTo(groupTabBarItemViewWidth)
+                    }
+                }
+            }
+            
+            if view.isSelected.isGroupSelected {
+                if animate {
+                    UIView.animate(withDuration: duration, animations: { [weak self] in
+                        if atFirst {
+                            self?.higlightView.snp.makeConstraints { make in
+                                make.centerX.equalTo(CGFloat(index) * visibleTabBarItemWidth + 0.5 * groupTabBarItemViewWidth)
+                            }
+                        } else {
+                            self?.higlightView.snp.updateConstraints { make in
+                                make.centerX.equalTo(CGFloat(index) * visibleTabBarItemWidth + 0.5 * groupTabBarItemViewWidth)
+                            }
+                        }
+                        
+                        self?.higlightView.superview?.layoutIfNeeded()
+                    })
+                    
+                } else {
+                    
+                    if atFirst {
+                        higlightView.snp.makeConstraints { make in
+                            make.centerX.equalTo(CGFloat(index) * visibleTabBarItemWidth + 0.5 * groupTabBarItemViewWidth)
+                        }
+                    } else {
+                        higlightView.snp.updateConstraints { make in
+                            make.centerX.equalTo(CGFloat(index) * visibleTabBarItemWidth + 0.5 * groupTabBarItemViewWidth)
+                        }
+                    }
                 }
             }
         }

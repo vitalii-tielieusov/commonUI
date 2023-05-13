@@ -27,7 +27,7 @@ public protocol TabBarGroupItemViewDelegate: AnyObject {
 }
 
 public protocol TabBarGroupItemView: AnyObject {
-    var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?) { get set }
+    var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?, animate: Bool, duration: TimeInterval) { get set }
     var tabBarItemViews: [TabBarSubItemView] { get }
     var delegate: TabBarGroupItemViewDelegate? { get set }
 
@@ -35,7 +35,6 @@ public protocol TabBarGroupItemView: AnyObject {
         title: String?,
         font: UIFont?,
         textColor: UIColor?,
-        textBackgroundImage: UIImage?,
         collapsedGroupImage: UIImage?,
         subItems: [TabBarSubItem]
     )
@@ -47,18 +46,17 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         expandedGroupSubItems
     }
 
-    public var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?) = (isGroupSelected: false, selectedTabBarItemIndex: nil) {
+    public var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?, animate: Bool, duration: TimeInterval) = (isGroupSelected: false, selectedTabBarItemIndex: nil, animate: false, duration: 0.3) {
         didSet {
             guard oldValue != isSelected else { return }
 
-            setupAsSelected(isGroupSelected: isSelected.0, selectedTabBarItemIndex: isSelected.1)
+            setupAsSelected(isGroupSelected: isSelected.0, selectedTabBarItemIndex: isSelected.1, animate: isSelected.2, duration: isSelected.3)
         }
     }
 
     private let title: String?
     private let font: UIFont?
     private let textColor: UIColor?
-    private var textBackgroundImage: UIImage?
     private let expandedGroupSubItems: [TabBarSubItemViewImpl]
     private let collapsedGroupSubItem: TabBarSubItemViewImpl
     
@@ -80,11 +78,6 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         return stackView
     }()
 
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
-
     private lazy var label: UILabel = {
         let label = UILabel()
         label.font = Constants.labelFont
@@ -93,13 +86,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
 
     private lazy var titleView: UIView = {
         let view = PassthroughView()
-        view.addSubview(imageView)
         view.addSubview(label)
-        
-        imageView.snp.makeConstraints { make in
-            make.bottom.equalToSuperview()
-            make.centerX.equalToSuperview()
-        }
         
         label.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
@@ -113,14 +100,12 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         title: String?,
         font: UIFont?,
         textColor: UIColor?,
-        textBackgroundImage: UIImage?,
         collapsedGroupImage: UIImage?,
         subItems: [TabBarSubItem]
     ) {
         self.title = title
         self.font = font
         self.textColor = textColor
-        self.textBackgroundImage = textBackgroundImage
         self.collapsedGroupSubItem = TabBarSubItemViewImpl(
             tabBarItemImage: collapsedGroupImage,
             selectedTabBarItemImage: collapsedGroupImage
@@ -143,7 +128,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         setupLayouts()
         
         setupContentStackView()
-        setupAsSelected(isGroupSelected: false, selectedTabBarItemIndex: nil, animate: false)
+        setupAsSelected(isGroupSelected: false, selectedTabBarItemIndex: nil, animate: false, atFirst: true)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -178,7 +163,6 @@ extension TabBarGroupItemViewImpl {
         label.text = title
         label.font = font
         label.textColor = textColor
-        imageView.image = textBackgroundImage
         
         setupTabBarSubItemsStackView()
     }
@@ -197,38 +181,127 @@ extension TabBarGroupItemViewImpl {
     private func setupAsSelected(
         isGroupSelected: Bool,
         selectedTabBarItemIndex: Int?,
-        animate: Bool = false) {
-        
+        animate: Bool = true,
+        duration: TimeInterval = 0.3,
+        atFirst: Bool = false
+    ) {
+//        remakeConstraintsForTitleView(hide: !isGroupSelected, animate: true, duration: duration, atFirst: atFirst)
         if isGroupSelected {
-            hideView(titleView, hide: false, animate: animate)
-            expandGroup(true, animate: animate)
+            hideViewTitleView(hide: false, animate: animate, duration: duration)
+//            hideView(titleView, hide: false, animate: animate, duration: duration)
+            expandGroup(true, animate: animate, duration: duration)
             if let index = selectedTabBarItemIndex {
                 selectTabBarItem(atIndex: index)
             }
         } else {
-            hideView(titleView, hide: true, animate: animate)
-            expandGroup(false, animate: animate)
+            hideViewTitleView(hide: true, animate: animate, duration: duration)
+//            hideView(titleView, hide: true, animate: animate, duration: duration)
+            expandGroup(false, animate: animate, duration: duration)
+        }
+    }
+    
+    private func remakeConstraintsForTitleView(
+        hide: Bool,
+        animate: Bool = true,
+        duration: TimeInterval = 0.3,
+        atFirst: Bool = false
+    ) {
+        let offste: CGFloat = hide ? 15 : 10
+        if animate {
+            UIView.transition(with: label, duration: duration,
+                              options: .transitionCrossDissolve,
+                              animations: { [weak self] in
+                if atFirst {
+                    self?.label.snp.makeConstraints { make in
+                        make.top.equalToSuperview().offset(offste)
+                        make.centerX.equalToSuperview()
+                    }
+                } else {
+                    self?.label.snp.updateConstraints { make in
+                        make.top.equalToSuperview().offset(offste)
+                    }
+                }
+
+//                self?.label.superview?.layoutIfNeeded()
+            })
+//            UIView.transition(with: titleView, duration: duration,
+//                              options: .transitionCrossDissolve,
+//                              animations: { [weak self] in
+//                if atFirst {
+//                    self?.titleView.snp.makeConstraints { make in
+//                        make.top.equalToSuperview().offset(offste)
+//                        make.centerX.equalToSuperview()
+//                    }
+//                } else {
+//                    self?.titleView.snp.updateConstraints { make in
+//                        make.top.equalToSuperview().offset(offste)
+//                    }
+//                }
+//
+////                self?.titleView.superview?.layoutIfNeeded()
+//            })
+        } else {
+            if atFirst {
+                label.snp.makeConstraints { make in
+                    make.top.equalToSuperview().offset(offste)
+                    make.centerX.equalToSuperview()
+                }
+            } else {
+                label.snp.updateConstraints { make in
+                    make.top.equalToSuperview().offset(offste)
+                }
+            }
+//            if atFirst {
+//                titleView.snp.makeConstraints { make in
+//                    make.top.equalToSuperview().offset(offste)
+//                    make.centerX.equalToSuperview()
+//                }
+//            } else {
+//                titleView.snp.updateConstraints { make in
+//                    make.top.equalToSuperview().offset(offste)
+//                }
+//            }
         }
     }
 
-    private func expandGroup(_ expande: Bool, animate: Bool = true) {
+    private func expandGroup(
+        _ expande: Bool,
+        animate: Bool = true,
+        duration: TimeInterval = 0.3
+    ) {
         expandedGroupSubItems.forEach { view in
-            hideView(view, hide: !expande, animate: animate)
+            hideView(view, hide: !expande, animate: animate, duration: duration)
         }
-        hideView(collapsedGroupSubItem, hide: expande, animate: animate)
+        hideView(collapsedGroupSubItem, hide: expande, animate: animate, duration: duration)
     }
     
-    private func hideView(_ view: UIView, hide: Bool, animate: Bool = true) {
+    private func hideView(_ view: UIView, hide: Bool, animate: Bool = true, duration: TimeInterval = 0.3) {
         guard view.isHidden != hide else { return }
         
         if animate {
-            UIView.transition(with: view, duration: 0.3,
-                              options: .transitionCrossDissolve,
-                              animations: {
-                             view.isHidden = hide
-                          })
+            UIView.animate(withDuration: duration) {
+                view.isHidden = hide
+                view.superview?.layoutIfNeeded()
+            }
+//            UIView.transition(with: view, duration: duration,
+//                              options: .transitionCrossDissolve,
+//                              animations: {
+//                             view.isHidden = hide
+//                          })
         } else {
             view.isHidden = hide
+        }
+    }
+    
+    private func hideViewTitleView(hide: Bool, animate: Bool = true, duration: TimeInterval = 0.3) {
+        let textColor = hide ? UIColor.black : textColor
+        
+        if animate {
+            UIView.transition(with: label, duration: duration, options: .transitionCrossDissolve) { [weak self] in
+                self?.label.textColor = textColor
+            }
+        } else {
+            label.textColor = textColor
         }
     }
     
