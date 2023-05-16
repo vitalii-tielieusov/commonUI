@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class GroupingsTabBarViewImpl: UIView, TabBar {
+public class GroupingsTabBarViewImpl: UIView, TabBar, GroupingsTabBar {
 
     public weak var delegate: TabBarDelegate?
     private var tabBarItemViewModels: [TabBarGroupItem]
@@ -46,29 +46,13 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
         return view
     }()
     
-    required public init(tabBarItems: [TabBarGroupItem], tabBarWidth: CGFloat) {
+    required public init(tabBarItems: [TabBarGroupItem], tabBarWidth: CGFloat, tabBarTopOffset: CGFloat) {
         self.tabBarItemViewModels = tabBarItems
         self.tabBarWidth = tabBarWidth
         
         super.init(frame: .zero)
-    }
-    
-    //TODO: Should delete or combine with help of enum
-    public required init(tabBarItems: [TabBarItem]) {//TODO: Should think about 'init(tabBarItems: [TabBarGroupItem])' and 'init(tabBarItems: [TabBarItem]'
-        self.tabBarItemViewModels = []
-        self.tabBarWidth = 0
-        super.init(frame: .zero)
-    }
-    
-    public func setupUI(tabBarTopOffset: CGFloat) {
         
-        self.tabBarTopOffset = tabBarTopOffset
-        
-        setupViews()
-        setupLayouts()
-        
-        setupStackView()
-        selectTabBarItem(atIndex: selectedTabBarItem, animate: false, atFirst: true)
+        setupUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -80,6 +64,15 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
 }
 
 extension GroupingsTabBarViewImpl {
+    
+    private func setupUI() {
+
+        setupViews()
+        setupLayouts()
+        
+        setupStackView()
+        selectTabBarItem(atIndex: selectedTabBarItem, animate: false, atFirst: true)
+    }
     
     private func setupViews() {
         addSubview(stackView)

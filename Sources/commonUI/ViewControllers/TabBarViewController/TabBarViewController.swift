@@ -7,29 +7,6 @@
 
 import UIKit
 
-public protocol TabBarItemViewController: UIViewController {
-    var hidesTabBar: Bool { get }
-}
-
-public extension TabBarItemViewController {
-    var hidesTabBar: Bool { return false }
-}
-
-public protocol TabBarViewControllerDelegate: NSObjectProtocol {
-    func tabBarController(tabBarController: TabBarViewController,
-                          didSelect: UIViewController)
-}
-
-public extension TabBarViewControllerDelegate {
-    func tabBarController(tabBarController: TabBarViewController,
-                          didSelect: UIViewController) { }
-}
-
-public enum TabBarItems {
-    case flat(items: [TabBarItem]?)
-    case group(items: [TabBarGroupItem]?)
-}
-
 public protocol TabBarViewController {
     var rootView: UIView { get }
     var viewControllers: [UIViewController]? { get }
@@ -105,7 +82,8 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
                   vcs.count == tbis.count else {
                 return nil
             }
-            self.tabBarView = TabBarViewImpl(tabBarItems: tbis)
+            
+            self.tabBarView = TabBarViewImpl(tabBarItems: tbis, tabBarTopOffset: tabBarTopInset)
         case .group(let groupTabBarItems):
             guard let groupTbis = groupTabBarItems else { return nil }
             
@@ -115,7 +93,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
                 return nil
             }
             
-            self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: groupTbis, tabBarWidth: tabBarSize.width)
+            self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: groupTbis, tabBarWidth: tabBarSize.width, tabBarTopOffset: tabBarTopInset)
         }
 
         self._viewControllers = vcs
@@ -124,6 +102,8 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         self.tabBarBackgroundColor = tabBarBackgroundColor
         self.hideNavigationBar = hideNavigationBar
         super.init(nibName: nil, bundle: nil)
+        
+        self.tabBarView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -165,10 +145,9 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         }
         
         setupPagesViewController()
-        setupTabBar()
     }
 
-    func setupPagesViewController() {
+    private func setupPagesViewController() {
         var ncs = [UINavigationController]()
         for vc in _viewControllers {
             let nc = UINavigationController(rootViewController: vc)
@@ -179,11 +158,6 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         }
         
         pagesView.viewControllers = ncs
-    }
-    
-    func setupTabBar() {
-        tabBarView.delegate = self
-        tabBarView.setupUI(tabBarTopOffset: tabBarViewTopInset)
     }
 }
 

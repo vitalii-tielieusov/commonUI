@@ -7,25 +7,11 @@
 
 import UIKit
 
-public protocol TabBarDelegate: AnyObject {
-    func didClickTabBarItem(atIndex index: Int)
-}
-
-public protocol TabBar: AnyObject {
-    var selectedTabBarItem: Int { get set }
-    
-    var delegate: TabBarDelegate? { get set }
-    
-    init(tabBarItems: [TabBarItem])
-
-    func setupUI(tabBarTopOffset: CGFloat)//TODO: May be should delete, tabBarTopOffset should path via init
-}
-
-public class TabBarViewImpl: UIView, TabBar {
+public class TabBarViewImpl: UIView, TabBar, FlatTabBar {
     
     public weak var delegate: TabBarDelegate?
     private var tabBarItemViewModels: [TabBarItem]
-    private var tabBarTopOffset: CGFloat = 0
+    private var tabBarTopOffset: CGFloat
     public var selectedTabBarItem: Int = 0 {
         willSet {
             guard newValue != selectedTabBarItem else { return }
@@ -42,21 +28,13 @@ public class TabBarViewImpl: UIView, TabBar {
         return stackView
     }()
     
-    required public init(tabBarItems: [TabBarItem]) {
+    required public init(tabBarItems: [TabBarItem], tabBarTopOffset: CGFloat) {
         self.tabBarItemViewModels = tabBarItems
-        
-        super.init(frame: .zero)
-    }
-    
-    public func setupUI(tabBarTopOffset: CGFloat) {
-        
         self.tabBarTopOffset = tabBarTopOffset
         
-        setupViews()
-        setupLayouts()
+        super.init(frame: .zero)
         
-        setupStackView()
-        selectPage(atIndex: selectedTabBarItem)
+        setupUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -68,6 +46,15 @@ public class TabBarViewImpl: UIView, TabBar {
 }
 
 extension TabBarViewImpl {
+    
+    private func setupUI() {
+        
+        setupViews()
+        setupLayouts()
+        
+        setupStackView()
+        selectPage(atIndex: selectedTabBarItem)
+    }
     
     private func setupViews() {
         addSubview(stackView)
