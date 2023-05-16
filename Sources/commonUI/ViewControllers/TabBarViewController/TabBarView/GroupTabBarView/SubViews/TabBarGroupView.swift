@@ -27,7 +27,12 @@ public protocol TabBarGroupItemViewDelegate: AnyObject {
 }
 
 public protocol TabBarGroupItemView: AnyObject {
-    var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?, animate: Bool, duration: TimeInterval) { get set }
+    var isSelected: (
+        isGroupSelected: Bool,
+        selectedTabBarItemIndex: Int?,
+        animate: Bool,
+        duration: TimeInterval
+    ) { get set }
     var tabBarItemViews: [TabBarSubItemView] { get }
     var delegate: TabBarGroupItemViewDelegate? { get set }
 
@@ -46,11 +51,26 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         expandedGroupSubItems
     }
 
-    public var isSelected: (isGroupSelected: Bool, selectedTabBarItemIndex: Int?, animate: Bool, duration: TimeInterval) = (isGroupSelected: false, selectedTabBarItemIndex: nil, animate: false, duration: 0.3) {
+    public var isSelected: (
+        isGroupSelected: Bool,
+        selectedTabBarItemIndex: Int?,
+        animate: Bool,
+        duration: TimeInterval
+    ) = (
+        isGroupSelected: false,
+        selectedTabBarItemIndex: nil,
+        animate: false,
+        duration: 0.3
+    ) {
         didSet {
             guard oldValue != isSelected else { return }
 
-            setupAsSelected(isGroupSelected: isSelected.0, selectedTabBarItemIndex: isSelected.1, animate: isSelected.2, duration: isSelected.3)
+            setupAsSelected(
+                isGroupSelected: isSelected.0,
+                selectedTabBarItemIndex: isSelected.1,
+                animate: isSelected.2,
+                duration: isSelected.3
+            )
         }
     }
 
