@@ -84,7 +84,9 @@ extension TabBarSubItemViewImpl {
     
     private func setupLayouts() {
         imageView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview()
+//            make.center.equalToSuperview()
             make.height.equalTo(imageView.snp.width)
         }
     }

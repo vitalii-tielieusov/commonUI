@@ -12,7 +12,7 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
     public weak var delegate: TabBarDelegate?
     private var tabBarItemViewModels: [TabBarGroupItem]
     private var tabBarTopOffset: CGFloat = 0
-    private var tabBarWidth: CGFloat = 0//TODO: Should have no default value
+    private var tabBarWidth: CGFloat
     public var selectedTabBarItem: Int = 0 {
         willSet {
             guard newValue != selectedTabBarItem else { return }
@@ -56,6 +56,7 @@ public class GroupingsTabBarViewImpl: UIView, TabBar {
     //TODO: Should delete or combine with help of enum
     public required init(tabBarItems: [TabBarItem]) {//TODO: Should think about 'init(tabBarItems: [TabBarGroupItem])' and 'init(tabBarItems: [TabBarItem]'
         self.tabBarItemViewModels = []
+        self.tabBarWidth = 0
         super.init(frame: .zero)
     }
     

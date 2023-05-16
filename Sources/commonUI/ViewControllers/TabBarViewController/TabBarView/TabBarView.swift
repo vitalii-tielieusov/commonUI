@@ -17,7 +17,7 @@ public protocol TabBar: AnyObject {
     var delegate: TabBarDelegate? { get set }
     
     init(tabBarItems: [TabBarItem])
-    
+
     func setupUI(tabBarTopOffset: CGFloat)//TODO: May be should delete, tabBarTopOffset should path via init
 }
 

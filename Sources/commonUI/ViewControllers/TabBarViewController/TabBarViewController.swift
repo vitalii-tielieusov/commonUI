@@ -25,6 +25,11 @@ public extension TabBarViewControllerDelegate {
                           didSelect: UIViewController) { }
 }
 
+public enum TabBarItems {
+    case flat(items: [TabBarItem]?)
+    case group(items: [TabBarGroupItem]?)
+}
+
 public protocol TabBarViewController {
     var rootView: UIView { get }
     var viewControllers: [UIViewController]? { get }
@@ -32,7 +37,7 @@ public protocol TabBarViewController {
     var selectedIndex: Int { get set }
     
     init?(viewControllers: [TabBarItemViewController]?,
-          tabBarItems: [TabBarItem]?,
+          tabBarItems: TabBarItems,
           tabBarSize: CGSize,
           tabBarTopInset: CGFloat,
           tabBarBackgroundColor: UIColor?,
@@ -51,7 +56,7 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
         return pView
     }()
     
-    private let tabBarView: TabBarViewImpl
+    private let tabBarView: TabBar & UIView
     private var _viewControllers: [UIViewController]
     private let hideNavigationBar: Bool
     private let tabBarSize: CGSize
@@ -83,21 +88,36 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
     
     required public init?(
         viewControllers: [TabBarItemViewController]?,
-        tabBarItems: [TabBarItem]?,
+        tabBarItems: TabBarItems,
         tabBarSize: CGSize,
         tabBarTopInset: CGFloat = 0,
         tabBarBackgroundColor: UIColor?,
         hideNavigationBar: Bool
     ) {
-        
         guard let vcs = viewControllers,
-              let tbis = tabBarItems,
-              vcs.count == tbis.count,
               !vcs.isEmpty else {
-                  return nil
-              }
-        
-        self.tabBarView = TabBarViewImpl(tabBarItems: tbis)
+            return nil
+        }
+
+        switch tabBarItems {
+        case .flat(let flatTabBarItems):
+            guard let tbis = flatTabBarItems,
+                  vcs.count == tbis.count else {
+                return nil
+            }
+            self.tabBarView = TabBarViewImpl(tabBarItems: tbis)
+        case .group(let groupTabBarItems):
+            guard let groupTbis = groupTabBarItems else { return nil }
+            
+            let tbis = groupTbis.flatMap( { $0.subItems } )
+            
+            guard vcs.count == tbis.count else {
+                return nil
+            }
+            
+            self.tabBarView = GroupingsTabBarViewImpl(tabBarItems: groupTbis, tabBarWidth: tabBarSize.width)
+        }
+
         self._viewControllers = vcs
         self.tabBarSize = tabBarSize
         self.tabBarViewTopInset = tabBarTopInset
@@ -197,7 +217,6 @@ extension TabBarViewControllerImpl {
         self.delegate?.tabBarController(tabBarController: self, didSelect: selecedVC)
     }
 }
-//------------------------------------------------
 
 extension TabBarViewControllerImpl: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
