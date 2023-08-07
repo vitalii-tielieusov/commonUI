@@ -426,6 +426,12 @@ extension PagesViewImpl: PagesView {
         }
     }
     
+    var contentSize: CGSize {
+        get {
+            return scrollView.contentSize
+        }
+    }
+    
     var isClickable: Bool {
         get {
             return shouldAddTapGestureRecognizer

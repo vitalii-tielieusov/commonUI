@@ -14,6 +14,7 @@ public protocol PagesViewController: NSObjectProtocol {
     var selectedIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
     var contentOffset: CGPoint { get set }
+    var contentSize: CGSize { get }
     var scrollBehavior: ScrollBehavior { get set }
     var isClickable: Bool { get set }
     

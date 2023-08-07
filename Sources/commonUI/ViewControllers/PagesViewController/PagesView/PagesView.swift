@@ -17,6 +17,7 @@ public protocol PagesView {
     var selectedPageIndex: Int { get set }
     var isScrollEnabled: Bool { get set }
     var contentOffset: CGPoint { get set }
+    var contentSize: CGSize { get }
     var scrollBehavior: ScrollBehavior { get set }
     var isClickable: Bool { get set }
 

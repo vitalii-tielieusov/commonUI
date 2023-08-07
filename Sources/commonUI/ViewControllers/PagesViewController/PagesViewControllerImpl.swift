@@ -88,6 +88,10 @@ open class PagesViewControllerImpl: UIViewController, PagesViewController {
         }
     }
     
+    open var contentSize: CGSize {
+        return pagesView.contentSize
+    }
+    
     open var scrollBehavior: ScrollBehavior {
         get {
             return pagesView.scrollBehavior
