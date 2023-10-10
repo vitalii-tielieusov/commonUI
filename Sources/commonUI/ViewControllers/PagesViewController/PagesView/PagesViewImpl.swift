@@ -50,7 +50,7 @@ final class PagesViewImpl: UIView {
     
     init() {
         super.init(frame: .zero)
-        backgroundColor = .white
+        backgroundColor = .clear
         
         setupViews()
         setupLayouts()
