@@ -171,10 +171,12 @@ extension PagesViewControllerImpl: PagesViewDelegate {
     }
     
     public func didClickOnRightPageSide() {
+        delegate?.willClickOnRightSide(ofPageAtIndex: pagesView.selectedPageIndex)
         pagesView.selectNextPage(animated: true)
     }
     
     public func didClickOnLeftPageSide() {
+        delegate?.willClickOnLeftSide(ofPageAtIndex: pagesView.selectedPageIndex)
         pagesView.selectPreviousPage(animated: true)
     }
 }

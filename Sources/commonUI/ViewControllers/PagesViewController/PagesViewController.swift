@@ -27,12 +27,18 @@ public protocol PagesViewController: NSObjectProtocol {
 }
 
 public protocol PagesViewControllerDelegate: NSObjectProtocol {
+    func willClickOnRightSide(ofPageAtIndex index: Int)
+    func willClickOnLeftSide(ofPageAtIndex index: Int)
+    
     func didSelect(_ pagesController: UIViewController, pageAtIndex: Int)
     func didScroll(_ pagesController: UIViewController, contentOffset: CGPoint)
     func didEndDecelerating(_ pagesController: UIViewController, contentOffset: CGPoint)
 }
 
 public extension PagesViewControllerDelegate {
+    func willClickOnRightSide(ofPageAtIndex index: Int) { }
+    func willClickOnLeftSide(ofPageAtIndex index: Int) { }
+    
     func didSelect(_ pagesController: UIViewController, pageAtIndex: Int) { }
     func didScroll(_ pagesController: UIViewController, contentOffset: CGPoint) { }
     func didEndDecelerating(_ pagesController: UIViewController, contentOffset: CGPoint) { }
