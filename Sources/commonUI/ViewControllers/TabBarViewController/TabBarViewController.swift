@@ -53,8 +53,8 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
             return pagesView.selectedIndex
         }
         set {
-            pagesView.selectedIndex = newValue
             tabBarView.selectedTabBarItem = newValue
+            pagesView.selectedIndex = newValue
         }
     }
     
