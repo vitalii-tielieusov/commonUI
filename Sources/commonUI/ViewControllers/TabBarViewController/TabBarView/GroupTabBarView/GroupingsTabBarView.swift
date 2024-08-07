@@ -61,6 +61,16 @@ public class GroupingsTabBarViewImpl: UIView, TabBar, GroupingsTabBar {
     
     deinit {
     }
+    
+    public func updatetTabBarItems(withTitles titles: [String?]) {
+        guard titles.count == stackView.arrangedSubviews.count else { return }
+        
+        for (index, view) in stackView.arrangedSubviews.enumerated() {
+            if var tabBarItemView = view as? TabBarGroupItemView, titles.count > index {
+                tabBarItemView.updateTitle(titles[index])
+            }
+        }
+    }
 }
 
 extension GroupingsTabBarViewImpl {

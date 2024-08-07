@@ -43,6 +43,16 @@ public class TabBarViewImpl: UIView, TabBar, FlatTabBar {
     
     deinit {
     }
+    
+    public func updatetTabBarItems(withTitles titles: [String?]) {
+        guard titles.count == stackView.arrangedSubviews.count else { return }
+        
+        for (index, view) in stackView.arrangedSubviews.enumerated() {
+            if var tabBarItemView = view as? TabBarItemView, titles.count > index {
+                tabBarItemView.updateTitle(titles[index])
+            }
+        }
+    }
 }
 
 extension TabBarViewImpl {

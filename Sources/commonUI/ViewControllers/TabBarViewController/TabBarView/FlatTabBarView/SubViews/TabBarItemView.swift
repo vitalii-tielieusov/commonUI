@@ -38,6 +38,8 @@ public protocol TabBarItemView: AnyObject {
         font: UIFont?,
         textColor: UIColor?
     )
+    
+    func updateTitle(_ title: String?)
 }
 
 public class TabBarItemViewImpl: UIView, TabBarItemView {
@@ -53,7 +55,7 @@ public class TabBarItemViewImpl: UIView, TabBarItemView {
     public private(set) var id = UUID()
     private var tabBarItemImage: UIImage?
     private var selectedTabBarItemImage: UIImage?
-    private let title: String?
+    private var title: String?
     private let font: UIFont?
     private let textColor: UIColor?
     
@@ -95,6 +97,11 @@ public class TabBarItemViewImpl: UIView, TabBarItemView {
     }
     
     deinit {
+    }
+    
+    public func updateTitle(_ title: String?) {
+        self.title = title
+        label.text = title
     }
 }
 

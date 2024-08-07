@@ -43,6 +43,8 @@ public protocol TabBarGroupItemView: AnyObject {
         collapsedGroupImage: UIImage?,
         subItems: [TabBarSubItem]
     )
+    
+    func updateTitle(_ title: String?)
 }
 
 public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
@@ -74,7 +76,7 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
         }
     }
 
-    private let title: String?
+    private var title: String?
     private let font: UIFont?
     private let textColor: UIColor?
     private let expandedGroupSubItems: [TabBarSubItemViewImpl]
@@ -156,6 +158,11 @@ public class TabBarGroupItemViewImpl: UIView, TabBarGroupItemView {
     }
 
     deinit {
+    }
+    
+    public func updateTitle(_ title: String?) {
+        self.title = title
+        label.text = title
     }
 }
 

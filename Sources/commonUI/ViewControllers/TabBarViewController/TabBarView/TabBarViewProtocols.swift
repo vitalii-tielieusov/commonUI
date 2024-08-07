@@ -20,9 +20,13 @@ public protocol TabBar: AnyObject {
 public protocol FlatTabBar: AnyObject {
     
     init(tabBarItems: [TabBarItem], tabBarTopOffset: CGFloat)
+    
+    func updatetTabBarItems(withTitles titles: [String?])
 }
 
 public protocol GroupingsTabBar: AnyObject {
     
     init(tabBarItems: [TabBarGroupItem], tabBarWidth: CGFloat, tabBarTopOffset: CGFloat)
+    
+    func updatetTabBarItems(withTitles titles: [String?])
 }

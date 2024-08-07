@@ -21,6 +21,8 @@ public protocol TabBarViewController {
           hideNavigationBar: Bool)
     
     var delegate: TabBarViewControllerDelegate? { get set }
+    
+    func updatetTabBarItems(withTitles titles: [String?])
 }
 
 public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
@@ -63,6 +65,16 @@ public class TabBarViewControllerImpl: UIViewController, TabBarViewController {
     }
     
     weak public var delegate: TabBarViewControllerDelegate?
+    
+    public func updatetTabBarItems(withTitles titles: [String?]) {
+        guard !titles.isEmpty else { return }
+        
+        if var tabBarView = self.tabBarView as? FlatTabBar {
+            tabBarView.updatetTabBarItems(withTitles: titles)
+        } else if var tabBarView = self.tabBarView as? GroupingsTabBar {
+            tabBarView.updatetTabBarItems(withTitles: titles)
+        }
+    }
     
     required public init?(
         viewControllers: [TabBarItemViewController]?,
